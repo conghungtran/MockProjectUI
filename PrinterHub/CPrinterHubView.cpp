@@ -17,6 +17,7 @@
 #define new DEBUG_NEW
 #endif
 #include "CAddPrinterDlg.h"
+#include <iostream>
 
 
 // CPrinterHubView
@@ -30,10 +31,11 @@ BEGIN_MESSAGE_MAP(CPrinterHubView, CFormView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CPrinterHubView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
-	ON_BN_CLICKED(IDC_BUTTON8, &CPrinterHubView::OnBnClickedButton8)
-	ON_BN_CLICKED(IDC_BUTTON5, &CPrinterHubView::OnBnClickedButton5)
+	//ON_BN_CLICKED(IDC_BUTTON8, &CPrinterHubView::OnBnClickedButton8)
+	ON_BN_CLICKED(IDC_BUTTON5, &CPrinterHubView::OnBnClickedButtonOK)
 	ON_BN_CLICKED(IDC_BUTTON4, &CPrinterHubView::OnBnClickedButton4)
-	ON_BN_CLICKED(IDC_BUTTON1, &CPrinterHubView::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON1, &CPrinterHubView::OnBnClickedButtonEdit)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST3, &CPrinterHubView::OnLvnItemchangedList3)
 END_MESSAGE_MAP()
 
 // CPrinterHubView construction/destruction
@@ -52,8 +54,9 @@ CPrinterHubView::~CPrinterHubView()
 void CPrinterHubView::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_LIST2, IDC_LIST_TICKETS);
+	DDX_Control(pDX, IDC_LIST2, m_listFirmWare);
 	DDX_Control(pDX, IDC_LIST1, m_ListPrinters);
+	DDX_Control(pDX, IDC_LIST3, m_listTicket);
 }
 
 BOOL CPrinterHubView::PreCreateWindow(CREATESTRUCT& cs)
@@ -83,12 +86,30 @@ void CPrinterHubView::OnInitialUpdate()
 	m_ListPrinters.SetItemText(nItem, 3, _T("HP LaserJet"));
 
 	//// Firmware queue mẫu
-	//m_listFirmware.AddString(_T("HP_FW_v2.3.1.bin"));
-	//m_listFirmware.AddString(_T("Canon_FW_v1.8.bin"));
+	m_listFirmWare.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	m_listFirmWare.InsertColumn(0, _T("INDEX"), LVCFMT_LEFT, 100);
+	m_listFirmWare.InsertColumn(1, _T("NAME"), LVCFMT_LEFT, 200);
+	m_listFirmWare.InsertColumn(2, _T("VERSION"), LVCFMT_LEFT, 200);
+	m_listFirmWare.InsertColumn(3, _T("STATUS"), LVCFMT_LEFT, 200);
 
-	//// Tickets mẫu
-	//m_listTickets.AddString(_T("[OPEN] TK-001 - Kẹt giấy"));
-	//m_listTickets.AddString(_T("[OPEN] TK-002 - Hết mực"));
+	int nItemFirmWare = m_listFirmWare.InsertItem(0, _T("1"));
+	m_listFirmWare.SetItemText(nItemFirmWare, 1, _T("HP LaserJet Pro"));
+	m_listFirmWare.SetItemText(nItemFirmWare, 2, _T("Firmware v2.1.0"));
+	m_listFirmWare.SetItemText(nItemFirmWare, 3, _T("Pending"));
+
+	// Tickets mẫu
+	// Firmware queue mẫu
+	m_listTicket.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	m_listTicket.InsertColumn(0, _T("Priority"), LVCFMT_LEFT, 150);
+	m_listTicket.InsertColumn(1, _T("DESCRIPTION"), LVCFMT_LEFT, 150);
+	m_listTicket.InsertColumn(2, _T("PRINTER"), LVCFMT_LEFT, 150);
+	m_listTicket.InsertColumn(3, _T("STATUS"), LVCFMT_LEFT, 150);
+
+	int nItemTicket = m_listTicket.InsertItem(0, _T("Critical"));
+	m_listTicket.SetItemText(nItemTicket, 1, _T("No Paper"));
+	m_listTicket.SetItemText(nItemTicket, 2, _T("PRN-001"));
+	m_listTicket.SetItemText(nItemTicket, 3, _T("Open"));
+
 
 
 	GetParentFrame()->RecalcLayout();
@@ -170,12 +191,14 @@ void CPrinterHubView::OnBnClickedButton8()
 	// TODO: Add your control notification handler code here
 }
 
-void CPrinterHubView::OnBnClickedButton5()
+void CPrinterHubView::OnBnClickedButtonOK()
 {
 	CAddPrinterDlg dlg;
 	if (dlg.DoModal() == IDOK) {
-
+		std::cout << "ID value: " << CT2A(dlg.cstr_Id) << std::endl;
+		std::cout << "Clicked Add and Continue\n";
 	}
+
 }
 
 void CPrinterHubView::OnBnClickedButton4()
@@ -187,10 +210,30 @@ void CPrinterHubView::OnBnClickedButton4()
 		AfxMessageBox(_T("Vui lòng chọn máy in cần xóa!"));
 }
 
-void CPrinterHubView::OnBnClickedButton1()
+void CPrinterHubView::OnBnClickedButtonEdit()
 {
+	int nSel = m_ListPrinters.GetNextItem(-1, LVNI_SELECTED);
+	// Cách 1: Lấy text từ cột 0 (cột đầu tiên)
+	CString strValue = m_ListPrinters.GetItemText(nSel, 0);
+	std::cout << "Column 0 value: " << CT2A(strValue) << std::endl;
+
+	CString strValue1 = m_ListPrinters.GetItemText(nSel, 1);
+	std::cout << "Column 1 value: " << CT2A(strValue1) << std::endl;
+
+	CString strValue2 = m_ListPrinters.GetItemText(nSel, 2);
+	std::cout << "Column 2 value: " << CT2A(strValue2) << std::endl;
+
+	CString strValue3 = m_ListPrinters.GetItemText(nSel, 3);
+	std::cout << "Column 3 value: " << CT2A(strValue3) << std::endl;
 	CAddPrinterDlg dlg;
 	if (dlg.DoModal() == IDOK) {
 
 	}
+}
+
+void CPrinterHubView::OnLvnItemchangedList3(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	*pResult = 0;
 }

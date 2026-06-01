@@ -50,12 +50,14 @@ protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
 public:
-	CListCtrl IDC_LIST_TICKETS;
+	CListCtrl m_listFirmWare;
 	afx_msg void OnBnClickedButton8();
-	afx_msg void OnBnClickedButton5();
+	afx_msg void OnBnClickedButtonOK();
 	CListCtrl m_ListPrinters;
 	afx_msg void OnBnClickedButton4();
-	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButtonEdit();
+	afx_msg void OnLvnItemchangedList3(NMHDR* pNMHDR, LRESULT* pResult);
+	CListCtrl m_listTicket;
 };
 
 #ifndef _DEBUG  // debug version in CPrinterHubView.cpp
