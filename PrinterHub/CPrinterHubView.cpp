@@ -29,6 +29,8 @@ BEGIN_MESSAGE_MAP(CPrinterHubView, CFormView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CPrinterHubView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_BN_CLICKED(IDC_BUTTON8, &CPrinterHubView::OnBnClickedButton8)
+	ON_BN_CLICKED(IDC_BUTTON5, &CPrinterHubView::OnBnClickedButton5)
 END_MESSAGE_MAP()
 
 // CPrinterHubView construction/destruction
@@ -47,6 +49,7 @@ CPrinterHubView::~CPrinterHubView()
 void CPrinterHubView::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LIST2, IDC_LIST_TICKETS);
 }
 
 BOOL CPrinterHubView::PreCreateWindow(CREATESTRUCT& cs)
@@ -133,3 +136,13 @@ CPrinterHubDoc* CPrinterHubView::GetDocument() const // non-debug version is inl
 
 
 // CPrinterHubView message handlers
+
+void CPrinterHubView::OnBnClickedButton8()
+{
+	// TODO: Add your control notification handler code here
+}
+
+void CPrinterHubView::OnBnClickedButton5()
+{
+	// TODO: Add your control notification handler code here
+}

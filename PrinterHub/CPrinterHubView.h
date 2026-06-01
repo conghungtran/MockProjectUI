@@ -50,6 +50,10 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
+public:
+	CListCtrl IDC_LIST_TICKETS;
+	afx_msg void OnBnClickedButton8();
+	afx_msg void OnBnClickedButton5();
 };
 
 #ifndef _DEBUG  // debug version in CPrinterHubView.cpp
