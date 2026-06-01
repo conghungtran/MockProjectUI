@@ -33,7 +33,6 @@ protected:
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
-
 // Implementation
 public:
 	virtual ~CPrinterHubView();
@@ -54,6 +53,9 @@ public:
 	CListCtrl IDC_LIST_TICKETS;
 	afx_msg void OnBnClickedButton8();
 	afx_msg void OnBnClickedButton5();
+	CListCtrl m_ListPrinters;
+	afx_msg void OnBnClickedButton4();
+	afx_msg void OnBnClickedButton1();
 };
 
 #ifndef _DEBUG  // debug version in CPrinterHubView.cpp

@@ -16,6 +16,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "CAddPrinterDlg.h"
 
 
 // CPrinterHubView
@@ -31,6 +32,8 @@ BEGIN_MESSAGE_MAP(CPrinterHubView, CFormView)
 	ON_WM_RBUTTONUP()
 	ON_BN_CLICKED(IDC_BUTTON8, &CPrinterHubView::OnBnClickedButton8)
 	ON_BN_CLICKED(IDC_BUTTON5, &CPrinterHubView::OnBnClickedButton5)
+	ON_BN_CLICKED(IDC_BUTTON4, &CPrinterHubView::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON1, &CPrinterHubView::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 // CPrinterHubView construction/destruction
@@ -50,6 +53,7 @@ void CPrinterHubView::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST2, IDC_LIST_TICKETS);
+	DDX_Control(pDX, IDC_LIST1, m_ListPrinters);
 }
 
 BOOL CPrinterHubView::PreCreateWindow(CREATESTRUCT& cs)
@@ -63,6 +67,30 @@ BOOL CPrinterHubView::PreCreateWindow(CREATESTRUCT& cs)
 void CPrinterHubView::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
+
+	// Thiết lập cột cho List Printers
+	m_ListPrinters.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	m_ListPrinters.InsertColumn(0, _T("ID"), LVCFMT_LEFT, 100);
+	m_ListPrinters.InsertColumn(1, _T("MODEL"), LVCFMT_LEFT, 200);
+	m_ListPrinters.InsertColumn(2, _T("BRAND"), LVCFMT_LEFT, 200);
+	m_ListPrinters.InsertColumn(3, _T("PURCHASE DATE"), LVCFMT_LEFT, 300);
+	m_ListPrinters.InsertColumn(4, _T("WARRANTY MONTH"), LVCFMT_LEFT, 200);
+
+	//// Dữ liệu mẫu
+	int nItem = m_ListPrinters.InsertItem(0, _T("Printer-01"));
+	m_ListPrinters.SetItemText(nItem, 1, _T("Online"));
+	m_ListPrinters.SetItemText(nItem, 2, _T("192.168.1.10"));
+	m_ListPrinters.SetItemText(nItem, 3, _T("HP LaserJet"));
+
+	//// Firmware queue mẫu
+	//m_listFirmware.AddString(_T("HP_FW_v2.3.1.bin"));
+	//m_listFirmware.AddString(_T("Canon_FW_v1.8.bin"));
+
+	//// Tickets mẫu
+	//m_listTickets.AddString(_T("[OPEN] TK-001 - Kẹt giấy"));
+	//m_listTickets.AddString(_T("[OPEN] TK-002 - Hết mực"));
+
+
 	GetParentFrame()->RecalcLayout();
 	ResizeParentToFit();
 
@@ -127,7 +155,7 @@ void CPrinterHubView::Dump(CDumpContext& dc) const
 	CFormView::Dump(dc);
 }
 
-CPrinterHubDoc* CPrinterHubView::GetDocument() const // non-debug version is inline
+CPrinterHubDoc* CPrinterHubView::GetDocument() const
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CPrinterHubDoc)));
 	return (CPrinterHubDoc*)m_pDocument;
@@ -144,5 +172,25 @@ void CPrinterHubView::OnBnClickedButton8()
 
 void CPrinterHubView::OnBnClickedButton5()
 {
-	// TODO: Add your control notification handler code here
+	CAddPrinterDlg dlg;
+	if (dlg.DoModal() == IDOK) {
+
+	}
+}
+
+void CPrinterHubView::OnBnClickedButton4()
+{
+	int nSel = m_ListPrinters.GetNextItem(-1, LVNI_SELECTED);
+	if (nSel >= 0)
+		m_ListPrinters.DeleteItem(nSel);
+	else
+		AfxMessageBox(_T("Vui lòng chọn máy in cần xóa!"));
+}
+
+void CPrinterHubView::OnBnClickedButton1()
+{
+	CAddPrinterDlg dlg;
+	if (dlg.DoModal() == IDOK) {
+
+	}
 }

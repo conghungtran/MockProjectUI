@@ -195,6 +195,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CAddPrinterDlg.h" />
     <ClInclude Include="CPrinterHubView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CAddPrinterDlg.cpp" />
     <ClCompile Include="CPrinterHubView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">

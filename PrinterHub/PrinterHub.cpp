@@ -15,6 +15,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include <iostream>
 
 
 // PrinterHubApp
@@ -62,6 +63,25 @@ PrinterHubApp theApp;
 
 BOOL PrinterHubApp::InitInstance()
 {
+
+
+
+	// Tạo console window
+	if (!AllocConsole()) {
+		// Xử lý lỗi nếu cần
+	}
+
+	// Chuyển hướng stdout/stderr đến console
+	FILE* fp;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONOUT$", "w", stderr);
+	freopen_s(&fp, "CONIN$", "r", stdin);
+
+	// Bây giờ có thể dùng cout, printf, v.v.
+	std::cout << "Console da duoc tao!" << std::endl;
+
+
+
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
@@ -143,6 +163,8 @@ BOOL PrinterHubApp::InitInstance()
 int PrinterHubApp::ExitInstance()
 {
 	//TODO: handle additional resources you may have added
+
+	FreeConsole();
 	AfxOleTerm(FALSE);
 
 	return CWinAppEx::ExitInstance();
