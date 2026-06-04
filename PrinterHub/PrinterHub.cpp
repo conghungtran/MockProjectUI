@@ -78,7 +78,7 @@ BOOL PrinterHubApp::InitInstance()
 	freopen_s(&fp, "CONIN$", "r", stdin);
 
 	// Bây giờ có thể dùng cout, printf, v.v.
-	std::cout << "Console da duoc tao!" << std::endl;
+	std::cout << "Welcome to MFC: \n" << std::endl;
 
 
 

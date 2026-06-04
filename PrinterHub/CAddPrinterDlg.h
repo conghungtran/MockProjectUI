@@ -1,5 +1,6 @@
 #pragma once
 #include "afxdialogex.h"
+#include <Printer.h>
 
 
 // CAddPrinterDlg dialog
@@ -24,11 +25,27 @@ public:
 	CString cstr_Brand;
 	CString cstr_Status;
 	CString cstr_PurchaseDate;
-	CString cstr_WarrantyMonth;
+	int		int_WarrantyMonth = 0;
+	void GetPrinter(PrinterHub::Core::Printer& printer) const;
+
+
+	// Enum để biết là Add hay Edit
+	enum DialogMode { ModeAdd, ModeEdit };
+	void SetMode(DialogMode mode) { m_mode = mode; }
+	void SetEditData(
+                   const CString& CstrId
+                   ,const CString& CstrModel
+                   ,const CString& CstrBrand
+                   ,const CString& CstrStatus
+                   ,const CString& CstrPurchaseDate
+                   ,const int intWarrantyMonth
+                   );
+
+
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
+	DialogMode m_mode;
 	DECLARE_MESSAGE_MAP()
 public:
 	CComboBox m_cboBrand;
@@ -38,4 +55,5 @@ public:
 	CEdit m_editWarrantyMonth;
 	CComboBox m_cboStatus;
 	afx_msg void OnBnClickedButtonAddContinue();
+	afx_msg void OnEnChangeEditAddPrinterId();
 };

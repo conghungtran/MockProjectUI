@@ -22,6 +22,10 @@ std::string ConvertData::CStringToString(const CString& cstr)
     return std::string(CT2A(cstr));
 }
 
+int ConvertData::CStringToInt(const CString& cstr) {
+   return _ttoi(cstr);
+}
+
 /**
  * Converts a std::string to a CString
  */

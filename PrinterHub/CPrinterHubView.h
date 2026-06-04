@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 class CPrinterHubView : public CFormView
 {
 protected: // create from serialization only
@@ -19,13 +18,18 @@ public:
 // Attributes
 public:
 	CPrinterHubDoc* GetDocument() const;
-
+	
 // Operations
 public:
+	void CPrinterHubView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
+	void CPrinterHubView::OnDraw(CDC* pDC);
 
 // Overrides
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	
+
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual void OnInitialUpdate(); // called first time after construct
@@ -51,13 +55,30 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CListCtrl m_listFirmWare;
+	CListCtrl m_listTicket;
+	CListCtrl m_listPrinters;
+
+
+	void AddPrinterToList(const CString& strName, const CString& strIP, int nPort);
+	void RefreshPrintersList();  // Nếu dùng database
+	
+	void InitializeListControl();
+
+	void AddPrinterToList(
+		const CString& strId,
+		const CString& strModel,
+		const CString& strBrand,
+		const CString& strStatus,
+		const CString& strPurchaseDate,
+		const int& intWarrantyMonth);
+
 	afx_msg void OnBnClickedButton8();
-	afx_msg void OnBnClickedButtonOK();
-	CListCtrl m_ListPrinters;
+	afx_msg void OnBnClickedButtonAdd();
 	afx_msg void OnBnClickedButton4();
 	afx_msg void OnBnClickedButtonEdit();
 	afx_msg void OnLvnItemchangedList3(NMHDR* pNMHDR, LRESULT* pResult);
-	CListCtrl m_listTicket;
+	afx_msg void OnBnClickedButtonPrinterEditPrinter();
+	afx_msg void OnBnClickedButtonPrinterDeletePrinter();
 };
 
 #ifndef _DEBUG  // debug version in CPrinterHubView.cpp

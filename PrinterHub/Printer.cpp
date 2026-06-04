@@ -13,7 +13,7 @@ Printer::Printer(std::string ID
     , std::string purchaseDate
     , int warrantyMonth
 
-    )
+)
     : ID(ID)
     , model(model)
     , brand(brand)
@@ -21,10 +21,10 @@ Printer::Printer(std::string ID
     , purchaseDate(purchaseDate)
     , warrantyMonth(warrantyMonth)
 {
-	std::cout << "Constructed Printer: " << *this << std::endl;
+
 }
 
-Printer::Printer() {}
+//Printer::Printer() {}
 
 // Destructor
 Printer::~Printer()
@@ -41,6 +41,7 @@ Printer::Printer(const Printer& other)
     , warrantyMonth(other.warrantyMonth)
 {
 }
+
 
 // Assignment operator
 Printer& Printer::operator=(const Printer& other)
@@ -67,15 +68,26 @@ bool Printer::operator>(const Printer& other) const
 {
     return ID > other.ID;
 }
-
-// Output stream operator
+// Trong operator<< của bạn
 std::ostream& operator<<(std::ostream& os, const Printer& p)
 {
-    os << "Printer{ID: " << p.ID
-        << ", Model: " << p.model
-        << ", Brand: " << (int)p.brand
-        << ", Status: " << (int)p.status
-        << ", PurchaseDate: " << p.purchaseDate
-        << ", Warranty: " << p.warrantyMonth << " months}";
+    os << "Printer{ID=" << p.getId()
+        << ", Model=" << p.getModel()
+        << ", Brand=" << static_cast<int>(p.getBrand())  // ✅ Dùng static_cast
+        << ", Status=" << static_cast<int>(p.getStatus())  // ✅ Dùng static_cast
+        << ", PurchaseDate=" << p.getPurchaseDate()
+        << ", WarrantyMonth=" << p.getWarrantyMonth() << "}";
     return os;
 }
+
+void Printer::setAll(const std::string& mdl,
+    PrinterBrand b, PrinterStatus s,
+    const std::string& date, int months)
+{
+    model = mdl;
+    brand = b;
+    status = s;
+    purchaseDate = date;
+    warrantyMonth = months;
+}
+

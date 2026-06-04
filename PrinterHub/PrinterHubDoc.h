@@ -4,6 +4,7 @@
 
 
 #pragma once
+#include <Printer.h>
 
 
 class CPrinterHubDoc : public CDocument
@@ -14,14 +15,29 @@ protected: // create from serialization only
 
 // Attributes
 public:
-
+	CArray<PrinterHub::Core::Printer, PrinterHub::Core::Printer> m_arrPrinters;
 // Operations
 public:
 
+	// CRUD operations
+	void AddPrinter(const PrinterHub::Core::Printer& printer);
+	void EditPrinter(PrinterHub::Core::Printer& printer);
+
+
+	void UpdatePrinter(int nIndex, const PrinterHub::Core::Printer& printer);
+	void DeletePrinter(int nIndex);
+	void DeleteAllPrinters();
+	
+	const  PrinterHub::Core::Printer& GetPrinter(int nIndex) const;
+	//PrinterHub::Core::Printer& GetPrinter(int nIndex);
+
+	int GetPrinterCount() const { return m_arrPrinters.GetSize(); }
+	
 // Overrides
 public:
 	virtual BOOL OnNewDocument();
 	virtual void Serialize(CArchive& ar);
+
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
@@ -30,6 +46,9 @@ public:
 // Implementation
 public:
 	virtual ~CPrinterHubDoc();
+
+	//const CArray<PrinterInfo, PrinterInfo&>& GetPrinters() const { return m_arrPrinters; }
+
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;

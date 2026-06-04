@@ -6,7 +6,7 @@
 #include "afxdialogex.h"
 #include "CAddPrinterDlg.h"
 #include <iostream>
-
+#include "EnumConverter.h"
 
 // CAddPrinterDlg dialog
 
@@ -30,14 +30,57 @@ CAddPrinterDlg::CAddPrinterDlg(CWnd* pParent /*=nullptr*/)
 BOOL CAddPrinterDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
-
+    UpdateData(FALSE);
 
     if (m_mode == ModeEdit)
     {
-
         SetWindowText(_T("Edit Printer"));
         // Đổi text nút OK thành "Update"
         //GetDlgItem(IDOK)->SetWindowText(_T("&Update"));
+
+		std::cout << "Edit Mode\n";
+		std::cout << "Brand: " << CT2A(cstr_Brand) << "\n";
+		std::cout << "Status: " << CT2A(cstr_Status) << "\n";
+         // Load Brands
+        m_cboBrand.AddString(_T("HP"));
+        m_cboBrand.AddString(_T("CANON"));
+        m_cboBrand.AddString(_T("EPSON"));
+        m_cboBrand.AddString(_T("OTHER"));
+        m_cboBrand.SetCurSel(0);
+        // Load Brands
+        m_cboStatus.AddString(_T("ACTIVE"));
+        m_cboStatus.AddString(_T("RETIRED"));
+        m_cboStatus.AddString(_T("INSERVICE"));
+        m_cboStatus.SetCurSel(0);  // Set default
+
+        if (m_cboBrand.SelectString(0, cstr_Brand) == CB_ERR)
+        {
+            m_cboBrand.SetCurSel(3);  // Chọn OTHER nếu không tìm thấy
+        }
+
+        if (m_cboStatus.SelectString(0, cstr_Status) == CB_ERR)
+        {
+            m_cboStatus.SetCurSel(0);  // Chọn ACTIVE nếu không tìm thấy
+        }
+
+        // Chuyển đổi CString → COleDateTime
+        COleDateTime dt;
+        int  nMonth, nDay, nYear;
+        
+        // Parse định dạng DD/MM/YYYY
+        if (swscanf_s(cstr_PurchaseDate, _T("%d/%d/%d"), &nMonth, &nDay, &nYear) == 3)
+        {
+			std::cout << nMonth << "/" << nDay << "/" << nYear << "\n";
+            // Tạo COleDateTime (thứ tự: Năm, Tháng, Ngày)
+            dt.SetDate(nYear, nMonth, nDay);
+			cstr_PurchaseDate = dt.Format(_T("%m/%d/%Y"));  // Chuyển về định dạng MM/DD/YYYY để hiển thị
+            if (dt.GetStatus() == COleDateTime::valid)
+            {
+                // ✅ Set vào CDateTimeCtrl
+                m_dtpPurchaseDate.SetTime(dt);
+            }
+        }
+
     }
 
 	if (m_mode == ModeAdd)
@@ -45,21 +88,23 @@ BOOL CAddPrinterDlg::OnInitDialog()
 		SetWindowText(_T("Add Printer"));
 		// Đổi text nút OK thành "Add and Continue"
 		//GetDlgItem(IDOK)->SetWindowText(_T("&Add and Continue"));
+
+         // Load Brands
+        m_cboBrand.AddString(_T("HP"));
+        m_cboBrand.AddString(_T("CANON"));
+        m_cboBrand.AddString(_T("EPSON"));
+        m_cboBrand.AddString(_T("OTHER"));
+        m_cboBrand.SetCurSel(0);
+
+        // Load Brands
+        m_cboStatus.AddString(_T("ACTIVE"));
+        m_cboStatus.AddString(_T("RETIRED"));
+        m_cboStatus.AddString(_T("INSERVICE"));
+        m_cboStatus.SetCurSel(0);
 	}
 
 
-    // Load Brands
-    m_cboBrand.AddString(_T("DELL"));
-    m_cboBrand.AddString(_T("LG"));
-    m_cboBrand.AddString(_T("SAMSUNG"));
-    m_cboBrand.AddString(_T("TOSHIBA"));
-    m_cboBrand.SetCurSel(0);
-
-    // Load Brands
-    m_cboStatus.AddString(_T("ACTIVE"));
-    m_cboStatus.AddString(_T("RETIRED"));
-    m_cboStatus.AddString(_T("IN PROCESS"));
-    m_cboStatus.SetCurSel(0);
+   
 
     // Load districts for default city (Hà Nội)
     //LoadDistricts(0);
@@ -67,10 +112,32 @@ BOOL CAddPrinterDlg::OnInitDialog()
     return TRUE;
 }
 
-void CAddPrinterDlg::SetEditData() {
+void CAddPrinterDlg::SetEditData(
+                    const CString& CstrId
+                   ,const CString& CstrModel
+                   ,const CString& CstrBrand
+                   ,const CString& CstrStatus
+                   ,const CString& CstrPurchaseDate
+                   ,const int intWarrantyMonth
+                   )
+{
 
+    std::cout << ConvertData::CStringToString(CstrId) << "\n";
+    cstr_Id = CstrId;
+	cstr_Model = CstrModel;
+	cstr_Brand = CstrBrand;
+    cstr_Status = CstrStatus;
+	cstr_PurchaseDate = CstrPurchaseDate;
+    int_WarrantyMonth = intWarrantyMonth;
+
+	//m_editModel.SetWindowText(CstrModel);
+ //   m_editWarrantyMonth.SetWindowText(CstrWarrantyMonth);
+
+	//m_editId.SetWindowText(CstrBrand);
+	//m_editId.SetWindowText(CstrStatus);
+	//m_dtpPurchaseDate.SetWindowText(CstrPurchaseDate);
+	
 }
-
 
 CAddPrinterDlg::~CAddPrinterDlg()
 {
@@ -108,39 +175,66 @@ END_MESSAGE_MAP()
 void CAddPrinterDlg::OnBnClickedButtonAddContinue()
 {
     UpdateData(TRUE);
-    if (cstr_Id.IsEmpty())
-    {
-        AfxMessageBox(_T("ID cannot be empty"));
-        return;
-    }
 
-    if (cstr_Model.IsEmpty())
-    {
-        AfxMessageBox(_T("Model cannot be empty"));
-        return;
-    }
+    //if (cstr_Id.IsEmpty())
+    //{
+    //    AfxMessageBox(_T("ID cannot be empty"));
+    //    return;
+    //}
 
-    if (cstr_Brand.IsEmpty())
-    {
-        AfxMessageBox(_T("Brand cannot be empty"));
-        return;
-    }
+    //if (cstr_Model.IsEmpty())
+    //{
+    //    AfxMessageBox(_T("Model cannot be empty"));
+    //    return;
+    //}
 
-    if (cstr_PurchaseDate.IsEmpty())
-    {
-        AfxMessageBox(_T("Purchase cannot be empty"));
-        return;
-    }
+    //if (cstr_Brand.IsEmpty())
+    //{
+    //    AfxMessageBox(_T("Brand cannot be empty"));
+    //    return;
+    //}
 
-    if (int_WarrantyMonth == 0)
-    {
-        AfxMessageBox(_T("Warranty cannot be empty"));
-        return;
-    }
+    //if (cstr_PurchaseDate.IsEmpty())
+    //{
+    //    AfxMessageBox(_T("Purchase cannot be empty"));
+    //    return;
+    //}
 
-    std::cout << "CAdPrinterDlg Added \n";
+    //if (int_WarrantyMonth == 0)
+    //{
+    //    AfxMessageBox(_T("Warranty cannot be empty"));
+    //    return;
+    //}
+
+    std::cout << "CAdPrinterDlg Close\n";
     CDialogEx::OnOK();
 }
+
+void CAddPrinterDlg::GetPrinter(PrinterHub::Core::Printer& printer) const
+{
+    using namespace PrinterHub::Core;
+
+    // Chuyển đổi dữ liệu
+    std::string str_id = ConvertData::CStringToString(cstr_Id);
+    std::string str_model = ConvertData::CStringToString(cstr_Model);
+    std::string str_purchaseDate = ConvertData::CStringToString(cstr_PurchaseDate);
+
+    PrinterStatus status = EnumConverter::ToPrinterStatus(cstr_Status);
+    PrinterBrand brand = EnumConverter::ToPrinterBrand(cstr_Brand);
+
+    // Gán dữ liệu vào printer (cần có setter hoặc copy)
+    // Cách 1: Nếu Printer có constructor, tạo mới rồi gán
+    printer = Printer(str_id, str_model, brand, status, str_purchaseDate, int_WarrantyMonth);
+
+    // Cách 2: Nếu Printer có các setter method
+    // printer.setId(str_id);
+    // printer.setModel(str_model);
+    // printer.setBrand(brand);
+    // printer.setStatus(status);
+    // printer.setPurchaseDate(str_purchaseDate);
+    // printer.setWarrantyMonth(int_WarrantyMonth);
+}
+
 
 void CAddPrinterDlg::OnEnChangeEditAddPrinterId()
 {

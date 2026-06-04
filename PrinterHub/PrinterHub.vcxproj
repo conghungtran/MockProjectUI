@@ -150,6 +150,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -196,18 +197,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CAddPrinterDlg.h" />
+    <ClInclude Include="ControllerStatus.h" />
+    <ClInclude Include="ConvertData.h" />
     <ClInclude Include="CPrinterHubView.h" />
+    <ClInclude Include="EnumConverter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Printer.h" />
     <ClInclude Include="PrinterHub.h" />
     <ClInclude Include="PrinterHubDoc.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="PrinterConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CAddPrinterDlg.cpp" />
+    <ClCompile Include="ControllerStatus.cpp" />
+    <ClCompile Include="ConvertData.cpp" />
     <ClCompile Include="CPrinterHubView.cpp" />
+    <ClCompile Include="EnumConverter.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -215,6 +224,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Printer.cpp" />
     <ClCompile Include="PrinterHub.cpp" />
     <ClCompile Include="PrinterHubDoc.cpp" />
   </ItemGroup>
