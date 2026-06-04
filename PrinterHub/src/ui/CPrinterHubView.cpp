@@ -19,10 +19,11 @@
 #include "CAddPrinterDlg.h"
 #include <iostream>
 
-#include "Printer.h"
+#include "../core/Printer.h"
 
-#include "ControllerStatus.h"
-#include "EnumConverter.h"
+#include "../core/ControllerStatus.h"
+#include "../core/EnumConverter.h"
+#include "../core/ConvertData.h"
 using namespace PrinterHub::Core;
 
 

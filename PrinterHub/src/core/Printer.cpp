@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Printer.h"
 #include <iostream>
+#include<atlstr.h>
+
 using namespace PrinterHub::Core;
 
 IMPLEMENT_DYNAMIC(Printer, CObject)

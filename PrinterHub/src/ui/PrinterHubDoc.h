@@ -4,7 +4,7 @@
 
 
 #pragma once
-#include <Printer.h>
+#include "../core/Printer.h"
 
 
 class CPrinterHubDoc : public CDocument

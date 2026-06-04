@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <atlstr.h>
 class ConvertData
 {
 public:	ConvertData();

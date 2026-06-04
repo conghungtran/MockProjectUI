@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ConvertData.h"
-#include <atlstr.h> // Required for CString
+#include<atlstr.h>
 
 // Constructor
 ConvertData::ConvertData()

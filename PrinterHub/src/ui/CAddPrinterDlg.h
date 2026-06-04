@@ -1,6 +1,6 @@
 #pragma once
 #include "afxdialogex.h"
-#include <Printer.h>
+#include "../core/Printer.h"
 
 
 // CAddPrinterDlg dialog

@@ -6,7 +6,8 @@
 #include "afxdialogex.h"
 #include "CAddPrinterDlg.h"
 #include <iostream>
-#include "EnumConverter.h"
+#include "../core/EnumConverter.h"
+#include "../core/ConvertData.h"
 
 // CAddPrinterDlg dialog
 

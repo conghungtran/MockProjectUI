@@ -15,83 +15,80 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PrinterHub.h">
+    <ClInclude Include="src\ui\PrinterHub.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="src\ui\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="src\ui\targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MainFrm.h">
+    <ClInclude Include="src\ui\MainFrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PrinterHubDoc.h">
+    <ClInclude Include="src\ui\PrinterHubDoc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CPrinterHubView.h">
+    <ClInclude Include="src\ui\CPrinterHubView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
+    <ClInclude Include="src\ui\Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="src\ui\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CAddPrinterDlg.h">
+    <ClInclude Include="src\ui\CAddPrinterDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConvertData.h">
+    <ClInclude Include="src\core\ConvertData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ControllerStatus.h">
+    <ClInclude Include="src\core\ControllerStatus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnumConverter.h">
+    <ClInclude Include="src\core\EnumConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Printer.h">
+    <ClInclude Include="src\core\Printer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PrinterConfig.h">
+    <ClInclude Include="src\core\PrinterConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PrinterHub.cpp">
+    <ClCompile Include="src\ui\PrinterHub.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainFrm.cpp">
+    <ClCompile Include="src\ui\MainFrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PrinterHubDoc.cpp">
+    <ClCompile Include="src\ui\PrinterHubDoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CPrinterHubView.cpp">
+    <ClCompile Include="src\ui\CPrinterHubView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="src\ui\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CAddPrinterDlg.cpp">
+    <ClCompile Include="src\ui\CAddPrinterDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ConvertData.cpp">
+    <ClCompile Include="src\core\ConvertData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ControllerStatus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnumConverter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Printer.cpp">
+    <ClCompile Include="src\core\Printer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="PrinterHub.rc">
+    <ResourceCompile Include="src\ui\PrinterHub.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
