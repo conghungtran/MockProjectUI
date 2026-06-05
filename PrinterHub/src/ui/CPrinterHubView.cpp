@@ -38,7 +38,6 @@ BEGIN_MESSAGE_MAP(CPrinterHubView, CFormView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CPrinterHubView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
-	//ON_BN_CLICKED(IDC_BUTTON8, &CPrinterHubView::OnBnClickedButton8)
 	ON_BN_CLICKED(IDC_BUTTON_PRINTER_ADD_PRINTER, &CPrinterHubView::OnBnClickedButtonAdd)
 
 	ON_BN_CLICKED(IDC_BUTTON_PRINTER_EDIT_PRINTER, &CPrinterHubView::OnBnClickedButtonPrinterEditPrinter)
@@ -94,14 +93,17 @@ void CPrinterHubView::InitializeListControl() {
 	m_listPrinters.InsertColumn(3, _T("STATUS"), LVCFMT_LEFT, 200);
 	m_listPrinters.InsertColumn(4, _T("PURCHASE DATE"), LVCFMT_LEFT, 300);
 	m_listPrinters.InsertColumn(5, _T("WARRANTY MONTH"), LVCFMT_LEFT, 200);
-
+	
 	// Dữ liệu mẫu
-	int nItem = m_listPrinters.InsertItem(0, _T("Printer-01"));
-	m_listPrinters.SetItemText(nItem, 1, _T("CMG"));
-	m_listPrinters.SetItemText(nItem, 2, _T("HP"));
-	m_listPrinters.SetItemText(nItem, 3, _T("RETIRED"));
-	m_listPrinters.SetItemText(nItem, 4, _T("9/19/2009"));
-	m_listPrinters.SetItemText(nItem, 5, _T("7"));
+	//int nItem = m_listPrinters.InsertItem(0, _T("Printer-01"));
+	//m_listPrinters.SetItemText(nItem, 1, _T("CMG"));
+	//m_listPrinters.SetItemText(nItem, 2, _T("HP"));
+	//m_listPrinters.SetItemText(nItem, 3, _T("RETIRED"));
+	//m_listPrinters.SetItemText(nItem, 4, _T("9/19/2009"));
+	//m_listPrinters.SetItemText(nItem, 5, _T("7"));
+
+
+	LoadFile();
 
 	// Firmware queue mẫu
 	m_listFirmWare.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
@@ -128,12 +130,83 @@ void CPrinterHubView::InitializeListControl() {
 	m_listTicket.SetItemText(nItemTicket, 2, _T("PRN-001"));
 	m_listTicket.SetItemText(nItemTicket, 3, _T("Open"));
 
+	
+
 	GetParentFrame()->RecalcLayout();
 	ResizeParentToFit();
 }
 
 
+void CPrinterHubView::LoadFile()
+{
+	CPrinterHubDoc* pDoc = GetDocument();
+	if (!pDoc) return;
 
+	// In ra thư mục làm việc hiện tại
+	TCHAR szCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, szCurrentDir);
+	std::cout << "Current working directory: " << CT2A(szCurrentDir) << std::endl;
+
+	// ✅ Đường dẫn đúng - vì working directory là gốc project
+	CString strFilePath = _T("printers.csv");
+
+	// Kiểm tra file tồn tại
+	if (GetFileAttributes(strFilePath) == INVALID_FILE_ATTRIBUTES)
+	{
+		std::cout << "File not found: " << CT2A(strFilePath) << std::endl;
+
+		// Thử các đường dẫn khác để debug
+		CString strFilePath2 = _T("../data/printers.csv");
+		CString strFilePath3 = _T("printers.csv");
+
+		if (GetFileAttributes(strFilePath2) != INVALID_FILE_ATTRIBUTES)
+		{
+			strFilePath = strFilePath2;
+			std::cout << "Found with forward slash: " << CT2A(strFilePath2) << std::endl;
+		}
+		else if (GetFileAttributes(strFilePath3) != INVALID_FILE_ATTRIBUTES)
+		{
+			strFilePath = strFilePath3;
+			std::cout << "Found with .\\ : " << CT2A(strFilePath3) << std::endl;
+		}
+		else
+		{
+			// Liệt kê thư mục data để kiểm tra
+			std::cout << "Listing data directory:" << std::endl;
+			CString strDataPath = _T("data\\*.*");
+			WIN32_FIND_DATA findData;
+			HANDLE hFind = FindFirstFile(strDataPath, &findData);
+			if (hFind != INVALID_HANDLE_VALUE)
+			{
+				do
+				{
+					std::cout << "  " << CT2A(findData.cFileName) << std::endl;
+				} while (FindNextFile(hFind, &findData));
+				FindClose(hFind);
+			}
+			else
+			{
+				std::cout << "Cannot open data directory!" << std::endl;
+			}
+
+			AfxMessageBox(_T("Cannot find printers.csv in data folder!"));
+			return;
+		}
+	}
+
+	std::cout << "Loading from: " << CT2A(strFilePath) << std::endl;
+
+	// Gọi hàm load
+	if (pDoc->LoadPrintersFromCSV(strFilePath, pDoc))
+	{
+		std::cout << "Loaded printers from CSV successfully.\n";
+		//RefreshPrintersList();
+	}
+	else
+	{
+		std::cout << "Failed to load printers from CSV.\n";
+	}
+}
 
 
 void CPrinterHubView::OnFilePrintPreview()
@@ -217,7 +290,7 @@ void CPrinterHubView::OnBnClickedButtonAdd()
 
 	if (dlg.DoModal() == IDOK) {
 		std::cout << "ID value: " << CT2A(dlg.cstr_Id) << std::endl;
-		std::cout << "Clicked Add and Continue\n";
+		std::cout << "Add Dialog Pop up\n";
 
 		std::cout << "ID: " << CT2A(dlg.cstr_Id) << std::endl;
 		std::cout << "Model: " << CT2A(dlg.cstr_Model) << std::endl;
@@ -238,7 +311,6 @@ void CPrinterHubView::OnBnClickedButtonAdd()
 
 		Printer printer(str_id, str_model, brand, status, str_purchaseDate, int_warrantyMonth);
 		pDoc->AddPrinter(printer);
-
 	}
 }
 
@@ -276,20 +348,7 @@ void CPrinterHubView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	else if (lHint == DocumentStatus::PRINTER_UPDATE)
 	{
 		int nIndex = (int)(INT_PTR)pHint;  // Ép từ CObject* về int
-		std::cout << "CPrinterHubView::OnUpdate called with PRINTER_UPDATE, nIndex = " << nIndex << std::endl;
-		const auto& _printer = pDoc->GetPrinter(nIndex);
-		// Cách đơn giản: Xóa item cũ rồi thêm lại item mới
-		m_listPrinters.DeleteItem(nIndex);
-		AddPrinterToList(
-			ConvertData::StringToCString(_printer.getId()),
-			ConvertData::StringToCString(_printer.getModel()),
-			EnumConverter::FromPrinterBrand(_printer.getBrand()),
-			EnumConverter::FromPrinterStatus(_printer.getStatus()),
-			ConvertData::StringToCString(_printer.getPurchaseDate()),
-			_printer.getWarrantyMonth()
-		);
-
-		std::cout << "CPrinterHubView::OnUpdate called with lHint = " << lHint << std::endl;
+		UpdatePrinterInList(nIndex, pDoc->GetPrinter(nIndex));
 		
 	}
 	else
@@ -298,6 +357,21 @@ void CPrinterHubView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		Invalidate();
 	}
 	Invalidate();
+}
+
+void CPrinterHubView::UpdatePrinterInList(int nIndex, const Printer& printer)
+{
+	std::cout << "CPrinterHubView::UpdatePrinterInList called with nIndex = " << nIndex << std::endl;
+	// ✅ Chỉ cập nhật item tại index, KHÔNG xóa toàn bộ
+	m_listPrinters.SetItemText(nIndex, 0, CString(printer.getId().c_str()));
+	m_listPrinters.SetItemText(nIndex, 1, CString(printer.getModel().c_str()));
+	m_listPrinters.SetItemText(nIndex, 2, EnumConverter::FromPrinterBrand(printer.getBrand()));
+	m_listPrinters.SetItemText(nIndex, 3, EnumConverter::FromPrinterStatus(printer.getStatus()));
+	m_listPrinters.SetItemText(nIndex, 4, CString(printer.getPurchaseDate().c_str()));
+
+	CString strWarranty;
+	strWarranty.Format(_T("%d"), printer.getWarrantyMonth());
+	m_listPrinters.SetItemText(nIndex, 5, strWarranty);
 }
 
 void CPrinterHubView::OnDraw(CDC* pDC)
@@ -390,13 +464,16 @@ void CPrinterHubView::OnBnClickedButtonPrinterEditPrinter()
 		ConvertData::CStringToInt(str_warrantyMonth));
 
 	if (dlg.DoModal() == IDOK) {
+		std::cout << "92929  " << ConvertData::CStringToString(dlg.cstr_Id) << std::endl;
 		PrinterHub::Core::Printer printer;
 		dlg.GetPrinter(printer);
-
+		printer.setId(ConvertData::CStringToString(dlg.cstr_Id));  // Giữ nguyên ID cũ
+		std::cout << "Updated Printer Info:\n";
+		std::cout << "ID: " << printer.getId() << std::endl;
+		std::cout << "Model: " << printer.getModel() << std::endl;
+		std::cout << "Warranty Month: " << printer.getWarrantyMonth() << std::endl;
 		CPrinterHubDoc* pDoc = GetDocument();
-		pDoc->EditPrinter(printer);
-
-
+		pDoc->EditPrinter(nSel, printer);
 
 
 		std::cout << "Edited \n";

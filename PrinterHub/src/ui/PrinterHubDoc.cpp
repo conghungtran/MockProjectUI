@@ -18,6 +18,12 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "io/CsvReader.h"
+#include "io/CsvWriter.h"
+#include "core/ConvertData.h"
+#include "core/Enumconverter.h"
+
+using namespace PrinterHub::Core;
 
 // CPrinterHubDoc
 
@@ -56,34 +62,15 @@ void CPrinterHubDoc::AddPrinter(const PrinterHub::Core::Printer& printer) {
 	UpdateAllViews(NULL, DocumentStatus::PRINTER_CREATE, (CObject*)(INT_PTR)nIndex);
 }
 
-void CPrinterHubDoc::EditPrinter(PrinterHub::Core::Printer& printer) {
+void CPrinterHubDoc::EditPrinter(int index, PrinterHub::Core::Printer& printer) {
 
-	if (printer.getId().empty()) {
-		std::cout << "CPrinterHubDoc::AddPrinter: printer ID is empty\n";
-		return;
-	}
+	std::cout << printer.getId() << std::endl;
+	std::cout << printer.getModel() << std::endl;
 
-	// 1. Xử lý logic / Thêm dữ liệu vào bộ nhớ tạm của Document
-	int nIndex = m_arrPrinters.GetSize();
-	for (int i = 0; i < nIndex; i++)
-	{
-		if (m_arrPrinters[i] == printer) {
-			//m_arrPrinters[i].setA(
-			//	printer.getModel(),
-			//	printer.getBrand(),
-			//	printer.getStatus(),
-			//	printer.getPurchaseDate(),
-			//	printer.getWarrantyMonth()
-			//);
-
-			m_arrPrinters[i] = printer;
-			break;
-		}
-	}
+	m_arrPrinters[index] = printer;
 
 
-
-	std::cout << "CPrinterHubDoc:Index: " << nIndex << std::endl;
+	std::cout << "CPrinterHubDoc:Index: " << index << std::endl;
 	SetModifiedFlag(TRUE);
 
 	// 2. (Tùy chọn) Lưu dữ liệu vào Database tại đây nếu cần
@@ -92,16 +79,108 @@ void CPrinterHubDoc::EditPrinter(PrinterHub::Core::Printer& printer) {
 
 	// 3. GỌI UPDATEALLVIEWS ĐỂ BÁO CHO VIEW BIẾT DATA ĐÃ THAY ĐỔI
 	// NULL nghĩa là báo cho TẤT CẢ các View đang gắn với Document này
-	UpdateAllViews(NULL, DocumentStatus::PRINTER_UPDATE, (CObject*)(INT_PTR)nIndex);
+	UpdateAllViews(NULL, DocumentStatus::PRINTER_UPDATE, (CObject*)(INT_PTR)index);
 }
 
+// Đọc danh sách Printer từ CSV
+bool CPrinterHubDoc::LoadPrintersFromCSV(const CString& strFilePath, CPrinterHubDoc* pDoc)
+{
+    using namespace PrinterHub::Core;
 
-// CPrinterHubDoc.cpp
-//PrinterHub::Core::Printer& CPrinterHubDoc::GetPrinter(int nIndex)
-//{
-//	ASSERT(nIndex >= 0 && nIndex < m_arrPrinters.GetSize());
-//	return m_arrPrinters[nIndex];  // ← Trả về non-const reference
-//}
+    CsvReader reader;
+    reader.SetDelimiter(_T(','));
+    reader.SetHasHeader(true);  // Dòng đầu là header
+
+    std::vector<std::vector<CString>> data;
+    if (!reader.ReadAll(strFilePath, data))
+    {
+        AfxMessageBox(_T("Cannot load printers from CSV"));
+        return false;
+    }
+
+    for (const auto& row : data)
+    {
+        if (row.size() >= 6)
+        {
+            Printer printer(
+                ConvertData::CStringToString(row[0]),  // ID
+                ConvertData::CStringToString(row[1]),  // Model
+                EnumConverter::ToPrinterBrand(row[2]), // Brand
+                EnumConverter::ToPrinterStatus(row[3]),// Status
+                ConvertData::CStringToString(row[4]),  // Purchase Date
+                _ttoi(row[5])                          // Warranty Month
+            );
+            pDoc->AddPrinter(printer);
+        }
+    }
+
+    return true;
+}
+
+// Ghi danh sách Printer xuống CSV
+bool CPrinterHubDoc::SavePrintersToCSV(const CString& strFilePath, CPrinterHubDoc* pDoc)
+{
+    using namespace PrinterHub::Core;
+
+    CsvWriter writer;
+    writer.SetDelimiter(_T(','));
+    writer.SetQuoteStrings(true);  // Tự động thêm quotes khi cần
+
+    // Ghi header
+    std::vector<CString> header = { _T("ID"), _T("Model"), _T("Brand"),
+                                   _T("Status"), _T("PurchaseDate"), _T("WarrantyMonth") };
+    if (!writer.WriteHeader(strFilePath, header, true))
+    {
+        return false;
+    }
+
+    // Ghi dữ liệu
+    for (int i = 0; i < pDoc->GetPrinterCount(); i++)
+    {
+        const auto& printer = pDoc->GetPrinter(i);
+
+        std::vector<CString> row;
+        row.push_back(CString(printer.getId().c_str()));
+        row.push_back(CString(printer.getModel().c_str()));
+        row.push_back(EnumConverter::FromPrinterBrand(printer.getBrand()));
+        row.push_back(EnumConverter::FromPrinterStatus(printer.getStatus()));
+        row.push_back(CString(printer.getPurchaseDate().c_str()));
+
+        CString strWarranty;
+        strWarranty.Format(_T("%d"), printer.getWarrantyMonth());
+        row.push_back(strWarranty);
+
+        if (!writer.AppendRow(strFilePath, row))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Cập nhật một dòng cụ thể
+bool CPrinterHubDoc::UpdatePrinterInCSV(const CString& strFilePath, int nRowIndex, const Printer& printer)
+{
+    using namespace PrinterHub::Core;
+
+    CsvWriter writer;
+    writer.SetDelimiter(_T(','));
+
+    std::vector<CString> row;
+    row.push_back(CString(printer.getId().c_str()));
+    row.push_back(CString(printer.getModel().c_str()));
+    row.push_back(EnumConverter::FromPrinterBrand(printer.getBrand()));
+    row.push_back(EnumConverter::FromPrinterStatus(printer.getStatus()));
+    row.push_back(CString(printer.getPurchaseDate().c_str()));
+
+    CString strWarranty;
+    strWarranty.Format(_T("%d"), printer.getWarrantyMonth());
+    row.push_back(strWarranty);
+
+    // Cập nhật dòng thứ nRowIndex (bỏ qua header)
+    return writer.UpdateRow(strFilePath, nRowIndex, row, true);
+}
 
 const PrinterHub::Core::Printer& CPrinterHubDoc::GetPrinter(int nIndex) const
 {

@@ -104,12 +104,6 @@ BOOL CAddPrinterDlg::OnInitDialog()
         m_cboStatus.SetCurSel(0);
 	}
 
-
-   
-
-    // Load districts for default city (Hà Nội)
-    //LoadDistricts(0);
-
     return TRUE;
 }
 
@@ -130,13 +124,6 @@ void CAddPrinterDlg::SetEditData(
     cstr_Status = CstrStatus;
 	cstr_PurchaseDate = CstrPurchaseDate;
     int_WarrantyMonth = intWarrantyMonth;
-
-	//m_editModel.SetWindowText(CstrModel);
- //   m_editWarrantyMonth.SetWindowText(CstrWarrantyMonth);
-
-	//m_editId.SetWindowText(CstrBrand);
-	//m_editId.SetWindowText(CstrStatus);
-	//m_dtpPurchaseDate.SetWindowText(CstrPurchaseDate);
 	
 }
 
@@ -147,9 +134,9 @@ CAddPrinterDlg::~CAddPrinterDlg()
 void CAddPrinterDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialogEx::DoDataExchange(pDX);
-    DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_BRAND, m_cboBrand);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_ID, m_editId);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_MODEL, m_editModel);
+    DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_BRAND, m_cboBrand);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_DATE, m_dtpPurchaseDate);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_WARRANTY, m_editWarrantyMonth);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_STATUS, m_cboStatus);
@@ -217,32 +204,19 @@ void CAddPrinterDlg::GetPrinter(PrinterHub::Core::Printer& printer) const
 
     // Chuyển đổi dữ liệu
     std::string str_id = ConvertData::CStringToString(cstr_Id);
+    std::cout << "1111GetPrinter: " << str_id << "\n";
     std::string str_model = ConvertData::CStringToString(cstr_Model);
     std::string str_purchaseDate = ConvertData::CStringToString(cstr_PurchaseDate);
 
     PrinterStatus status = EnumConverter::ToPrinterStatus(cstr_Status);
     PrinterBrand brand = EnumConverter::ToPrinterBrand(cstr_Brand);
 
-    // Gán dữ liệu vào printer (cần có setter hoặc copy)
-    // Cách 1: Nếu Printer có constructor, tạo mới rồi gán
     printer = Printer(str_id, str_model, brand, status, str_purchaseDate, int_WarrantyMonth);
 
-    // Cách 2: Nếu Printer có các setter method
-    // printer.setId(str_id);
-    // printer.setModel(str_model);
-    // printer.setBrand(brand);
-    // printer.setStatus(status);
-    // printer.setPurchaseDate(str_purchaseDate);
-    // printer.setWarrantyMonth(int_WarrantyMonth);
 }
 
 
 void CAddPrinterDlg::OnEnChangeEditAddPrinterId()
 {
-    // TODO:  If this is a RICHEDIT control, the control will not
-    // send this notification unless you override the CDialogEx::OnInitDialog()
-    // function and call CRichEditCtrl().SetEventMask()
-    // with the ENM_CHANGE flag ORed into the mask.
-
-    // TODO:  Add your control notification handler code here
+   
 }

@@ -6,6 +6,8 @@
 #pragma once
 #include "../core/Printer.h"
 
+using namespace PrinterHub::Core;
+
 
 class CPrinterHubDoc : public CDocument
 {
@@ -21,7 +23,7 @@ public:
 
 	// CRUD operations
 	void AddPrinter(const PrinterHub::Core::Printer& printer);
-	void EditPrinter(PrinterHub::Core::Printer& printer);
+	void EditPrinter(int index, PrinterHub::Core::Printer& printer);
 
 
 	void UpdatePrinter(int nIndex, const PrinterHub::Core::Printer& printer);
@@ -32,6 +34,12 @@ public:
 	//PrinterHub::Core::Printer& GetPrinter(int nIndex);
 
 	int GetPrinterCount() const { return m_arrPrinters.GetSize(); }
+	
+
+	// File IO
+	bool LoadPrintersFromCSV(const CString& strFilePath, CPrinterHubDoc* pDoc);
+	bool SavePrintersToCSV(const CString& strFilePath, CPrinterHubDoc* pDoc);
+	bool UpdatePrinterInCSV(const CString& strFilePath, int nRowIndex, const Printer& printer);
 	
 // Overrides
 public:

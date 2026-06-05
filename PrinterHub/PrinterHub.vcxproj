@@ -196,7 +196,10 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\io\CsvWriter.h" />
+    <ClInclude Include="src\io\CsvReader.h" />
     <ClInclude Include="src\core\pch.h" />
+    <ClInclude Include="src\io\pch.h" />
     <ClInclude Include="src\ui\CAddPrinterDlg.h" />
     <ClInclude Include="src\core\ControllerStatus.h" />
     <ClInclude Include="src\core\ConvertData.h" />
@@ -213,6 +216,8 @@
     <ClInclude Include="src\core\PrinterConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\io\CsvWriter.cpp" />
+    <ClCompile Include="src\io\CsvReader.cpp" />
     <ClCompile Include="src\ui\CAddPrinterDlg.cpp" />
     <ClCompile Include="src\core\ConvertData.cpp" />
     <ClCompile Include="src\ui\CPrinterHubView.cpp" />
@@ -238,6 +243,7 @@
     <Image Include="res\userimages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="printers.csv" />
     <None Include="res\PrinterHub.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

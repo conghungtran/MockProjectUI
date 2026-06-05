@@ -60,6 +60,15 @@
     <ClInclude Include="src\core\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\io\CsvReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\CsvWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ui\PrinterHub.cpp">
@@ -84,6 +93,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\Printer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\CsvReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\CsvWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,5 +128,6 @@
     <None Include="res\PrinterHub.rc2">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="printers.csv" />
   </ItemGroup>
 </Project>

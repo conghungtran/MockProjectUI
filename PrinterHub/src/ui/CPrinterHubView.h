@@ -28,6 +28,8 @@ public:
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	
+	void UpdatePrinterInList(int nIndex, const PrinterHub::Core::Printer& printer);
+	void LoadFile();
 
 
 protected:

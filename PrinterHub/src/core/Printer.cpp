@@ -8,7 +8,8 @@ using namespace PrinterHub::Core;
 IMPLEMENT_DYNAMIC(Printer, CObject)
 
 // Constructor
-Printer::Printer(std::string ID
+Printer::Printer(
+      std::string ID
     , std::string model
     , PrinterBrand brand
     , PrinterStatus status
@@ -59,17 +60,7 @@ Printer& Printer::operator=(const Printer& other)
     return *this;
 }
 
-// Equality operator
-bool Printer::operator==(const Printer& other) const
-{
-    return ID == other.ID;
-}
 
-// Greater than operator
-bool Printer::operator>(const Printer& other) const
-{
-    return ID > other.ID;
-}
 // Trong operator<< của bạn
 std::ostream& operator<<(std::ostream& os, const Printer& p)
 {
