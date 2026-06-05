@@ -31,6 +31,9 @@ CAddPrinterDlg::CAddPrinterDlg(CWnd* pParent /*=nullptr*/)
 BOOL CAddPrinterDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
+
+
+
     UpdateData(FALSE);
 
     if (m_mode == ModeEdit)
@@ -104,6 +107,17 @@ BOOL CAddPrinterDlg::OnInitDialog()
         m_cboStatus.SetCurSel(0);
 	}
 
+
+
+    m_btnCustom.SetWindowText(_T("OK"));
+    m_btnCustom.SetBackgroundColor(RGB(0, 100, 200));
+    m_btnCustom.SetHoverColor(RGB(0, 80, 170));
+    m_btnCustom.SetPressedColor(RGB(0, 60, 140));
+    m_btnCustom.SetTextColor(RGB(255, 255, 255));
+    m_btnCustom.SetBorderColor(RGB(0, 50, 120));
+    m_btnCustom.SetCornerRadius(8);
+    m_btnCustom.SetButtonFont(12, _T("Segoe UI"));
+
     return TRUE;
 }
 
@@ -140,6 +154,8 @@ void CAddPrinterDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_DATE, m_dtpPurchaseDate);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_WARRANTY, m_editWarrantyMonth);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_STATUS, m_cboStatus);
+
+    DDX_Control(pDX, IDC_BUTTON_ADD_CONTINUE, m_btnCustom);
 
     // Automatically map
     DDX_Text(pDX,IDC_EDIT_ADD_PRINTER_ID, cstr_Id);

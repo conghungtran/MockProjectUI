@@ -1,6 +1,7 @@
 #pragma once
 #include "afxdialogex.h"
 #include "../core/Printer.h"
+#include "component/CCustomButton.h"
 
 
 // CAddPrinterDlg dialog
@@ -56,4 +57,7 @@ public:
 	CComboBox m_cboStatus;
 	afx_msg void OnBnClickedButtonAddContinue();
 	afx_msg void OnEnChangeEditAddPrinterId();
+
+public:
+	CCustomButton m_btnCustom;
 };

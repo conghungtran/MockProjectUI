@@ -63,6 +63,8 @@ void CPrinterHubView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST2, m_listFirmWare);
 	DDX_Control(pDX, IDC_LIST1, m_listPrinters);
 	DDX_Control(pDX, IDC_LIST3, m_listTicket);
+
+	//DDX_Control(pDX, IDC_BUTTON_PRINTER_ADD_PRINTER, m_btnAdd);
 }
 
 BOOL CPrinterHubView::PreCreateWindow(CREATESTRUCT& cs)

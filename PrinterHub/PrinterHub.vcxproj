@@ -196,6 +196,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ui\component\CCustomButton.h" />
     <ClInclude Include="src\io\CsvWriter.h" />
     <ClInclude Include="src\io\CsvReader.h" />
     <ClInclude Include="src\core\pch.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="src\ui\CAddPrinterDlg.h" />
     <ClInclude Include="src\core\ControllerStatus.h" />
     <ClInclude Include="src\core\ConvertData.h" />
+    <ClInclude Include="src\ui\component\pch.h" />
     <ClInclude Include="src\ui\CPrinterHubView.h" />
     <ClInclude Include="src\core\EnumConverter.h" />
     <ClInclude Include="src\ui\framework.h" />
@@ -216,10 +218,12 @@
     <ClInclude Include="src\core\PrinterConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\component\CCustomButton.cpp" />
     <ClCompile Include="src\io\CsvWriter.cpp" />
     <ClCompile Include="src\io\CsvReader.cpp" />
     <ClCompile Include="src\ui\CAddPrinterDlg.cpp" />
     <ClCompile Include="src\core\ConvertData.cpp" />
+    <ClCompile Include="src\ui\component\pch.cpp" />
     <ClCompile Include="src\ui\CPrinterHubView.cpp" />
     <ClCompile Include="src\ui\MainFrm.cpp" />
     <ClCompile Include="src\ui\pch.cpp">
@@ -236,15 +240,15 @@
     <ResourceCompile Include="src\ui\PrinterHub.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\PrinterHub.ico" />
-    <Image Include="res\PrinterHubDoc.ico" />
-    <Image Include="res\Toolbar.bmp" />
-    <Image Include="res\Toolbar256.bmp" />
-    <Image Include="res\userimages.bmp" />
+    <Image Include="src\ui\res\PrinterHub.ico" />
+    <Image Include="src\ui\res\PrinterHubDoc.ico" />
+    <Image Include="src\ui\res\Toolbar.bmp" />
+    <Image Include="src\ui\res\Toolbar256.bmp" />
+    <Image Include="src\ui\res\userimages.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="printers.csv" />
-    <None Include="res\PrinterHub.rc2" />
+    <None Include="src\ui\res\PrinterHub.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

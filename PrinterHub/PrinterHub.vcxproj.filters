@@ -69,6 +69,12 @@
     <ClInclude Include="src\io\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ui\component\CCustomButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\component\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ui\PrinterHub.cpp">
@@ -101,6 +107,12 @@
     <ClCompile Include="src\io\CsvWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\component\CCustomButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\component\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\ui\PrinterHub.rc">
@@ -108,24 +120,24 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\userimages.bmp">
+    <Image Include="src\ui\res\userimages.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\PrinterHubDoc.ico">
+    <Image Include="src\ui\res\PrinterHubDoc.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\PrinterHub.ico">
+    <Image Include="src\ui\res\PrinterHub.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\Toolbar.bmp">
+    <Image Include="src\ui\res\Toolbar.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\Toolbar256.bmp">
+    <Image Include="src\ui\res\Toolbar256.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\PrinterHub.rc2">
+    <None Include="src\ui\res\PrinterHub.rc2">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="printers.csv" />
