@@ -22,7 +22,7 @@ public:
 public:
 
 	// CRUD operations
-	void AddPrinter(const PrinterHub::Core::Printer& printer);
+	void AddPrinter(const PrinterHub::Core::Printer& printer, int mode);
 	void EditPrinter(int index, PrinterHub::Core::Printer& printer);
 
 
@@ -40,6 +40,8 @@ public:
 	bool LoadPrintersFromCSV(const CString& strFilePath, CPrinterHubDoc* pDoc);
 	bool SavePrintersToCSV(const CString& strFilePath, CPrinterHubDoc* pDoc);
 	bool UpdatePrinterInCSV(const CString& strFilePath, int nRowIndex, const Printer& printer);
+	bool AppendPrinterToCSV(const Printer& printer, const CString& strFilePath);
+
 	
 // Overrides
 public:

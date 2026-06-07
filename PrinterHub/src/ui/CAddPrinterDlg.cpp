@@ -116,7 +116,13 @@ BOOL CAddPrinterDlg::OnInitDialog()
     m_btnCustom.SetTextColor(RGB(255, 255, 255));
     m_btnCustom.SetBorderColor(RGB(0, 50, 120));
     m_btnCustom.SetCornerRadius(8);
-    m_btnCustom.SetButtonFont(12, _T("Segoe UI"));
+    m_btnCustom.SetButtonFont(18, _T("Segoe UI"));
+
+
+    m_editCustom.SetPlaceholder(_T("Enter printer ID (e.g., PRN001)"));
+    m_editCustom.SetBorderColor(RGB(0, 120, 215));
+
+
 
     return TRUE;
 }
@@ -148,7 +154,9 @@ CAddPrinterDlg::~CAddPrinterDlg()
 void CAddPrinterDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialogEx::DoDataExchange(pDX);
-    DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_ID, m_editId);
+    //DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_ID, m_editId);
+    DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_ID, m_editCustom);
+
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_MODEL, m_editModel);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_BRAND, m_cboBrand);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_DATE, m_dtpPurchaseDate);

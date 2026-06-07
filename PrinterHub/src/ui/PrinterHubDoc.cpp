@@ -41,7 +41,7 @@ CPrinterHubDoc::CPrinterHubDoc() noexcept
 
 }
 //
-void CPrinterHubDoc::AddPrinter(const PrinterHub::Core::Printer& printer) {
+void CPrinterHubDoc::AddPrinter(const PrinterHub::Core::Printer& printer, int mode = 0) {
 	if (printer.getId().empty()) {
 		std::cout << "CPrinterHubDoc::AddPrinter: printer ID is empty\n";
 		return;
@@ -53,9 +53,14 @@ void CPrinterHubDoc::AddPrinter(const PrinterHub::Core::Printer& printer) {
 	m_arrPrinters.Add(printer);
 	SetModifiedFlag(TRUE);
 
-	// 2. (Tùy chọn) Lưu dữ liệu vào Database tại đây nếu cần
-	// OpenDatabaseConnection();
-	// ExecuteSQL("INSERT INTO Students ..."); 
+	// 2. Save Data
+    if (mode == 1) {
+        std::cout << "Adding printer to CSV: \n";
+        AppendPrinterToCSV(printer, _T("printers.csv"));
+    }
+   
+
+	
 
 	// 3. GỌI UPDATEALLVIEWS ĐỂ BÁO CHO VIEW BIẾT DATA ĐÃ THAY ĐỔI
 	// NULL nghĩa là báo cho TẤT CẢ các View đang gắn với Document này
@@ -74,8 +79,8 @@ void CPrinterHubDoc::EditPrinter(int index, PrinterHub::Core::Printer& printer) 
 	SetModifiedFlag(TRUE);
 
 	// 2. (Tùy chọn) Lưu dữ liệu vào Database tại đây nếu cần
-	// OpenDatabaseConnection();
-	// ExecuteSQL("INSERT INTO Students ..."); 
+	
+    UpdatePrinterInCSV(_T("printers.csv"), index, printer);
 
 	// 3. GỌI UPDATEALLVIEWS ĐỂ BÁO CHO VIEW BIẾT DATA ĐÃ THAY ĐỔI
 	// NULL nghĩa là báo cho TẤT CẢ các View đang gắn với Document này
@@ -114,6 +119,39 @@ bool CPrinterHubDoc::LoadPrintersFromCSV(const CString& strFilePath, CPrinterHub
         }
     }
 
+    return true;
+}
+
+// Trong CPrinterHubDoc.cpp
+bool CPrinterHubDoc::AppendPrinterToCSV(const Printer& printer, const CString& strFilePath)
+{
+    CStdioFile file;
+
+    // Mở file ở chế độ append (ghi tiếp vào cuối)
+    if (!file.Open(strFilePath, CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate))
+    {
+        TRACE(_T("Cannot open file for append: %s\n"), strFilePath);
+        return false;
+    }
+
+    // Di chuyển con trỏ đến cuối file
+    file.SeekToEnd();
+
+    // Format dòng dữ liệu mới
+    CString strLine;
+    strLine.Format(_T("%s,%s,%s,%s,%s,%d\n"),
+        CString(printer.getId().c_str()),
+        CString(printer.getModel().c_str()),
+        EnumConverter::FromPrinterBrand(printer.getBrand()),
+        EnumConverter::FromPrinterStatus(printer.getStatus()),
+        CString(printer.getPurchaseDate().c_str()),
+        printer.getWarrantyMonth());
+
+    // Ghi xuống file
+    file.WriteString(strLine);
+    file.Close();
+
+    TRACE(_T("Appended printer to CSV: %s\n"), printer.getId().c_str());
     return true;
 }
 

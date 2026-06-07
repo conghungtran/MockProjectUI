@@ -11,7 +11,7 @@ CCustomButton::CCustomButton()
     , m_clrBorder(RGB(0, 50, 120))          // Viền xanh đậm
     , m_bHover(false)
     , m_bPressed(false)
-    , m_nCornerRadius(10)                   // Bo góc 10 pixels
+    , m_nCornerRadius(200)                   // Bo góc 10 pixels
 {
 }
 

@@ -85,16 +85,17 @@ void CPrinterHubView::OnInitialUpdate()
 void CPrinterHubView::InitializeListControl() {
 
 	DWORD dwStyle = m_listPrinters.GetExtendedStyle();
-	dwStyle |= LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP;
+	dwStyle |= LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP | LVS_EX_CHECKBOXES;
 	m_listPrinters.SetExtendedStyle(dwStyle);
 
 	// Thiết lập cột cho List Printers
-	m_listPrinters.InsertColumn(0, _T("ID"), LVCFMT_LEFT, 100);
-	m_listPrinters.InsertColumn(1, _T("MODEL"), LVCFMT_LEFT, 200);
-	m_listPrinters.InsertColumn(2, _T("BRAND"), LVCFMT_LEFT, 200);
-	m_listPrinters.InsertColumn(3, _T("STATUS"), LVCFMT_LEFT, 200);
-	m_listPrinters.InsertColumn(4, _T("PURCHASE DATE"), LVCFMT_LEFT, 300);
-	m_listPrinters.InsertColumn(5, _T("WARRANTY MONTH"), LVCFMT_LEFT, 200);
+	m_listPrinters.InsertColumn(0, _T("STT"), LVCFMT_LEFT, 100);        // Cột checkbox (để trống)
+	m_listPrinters.InsertColumn(2, _T("ID"), LVCFMT_LEFT, 100);
+	m_listPrinters.InsertColumn(3, _T("MODEL"), LVCFMT_LEFT, 200);
+	m_listPrinters.InsertColumn(4, _T("BRAND"), LVCFMT_LEFT, 200);
+	m_listPrinters.InsertColumn(5, _T("STATUS"), LVCFMT_LEFT, 200);
+	m_listPrinters.InsertColumn(6, _T("PURCHASE DATE"), LVCFMT_LEFT, 300);
+	m_listPrinters.InsertColumn(7, _T("WARRANTY MONTH"), LVCFMT_LEFT, 200);
 	
 	// Dữ liệu mẫu
 	//int nItem = m_listPrinters.InsertItem(0, _T("Printer-01"));
@@ -273,7 +274,6 @@ CPrinterHubDoc* CPrinterHubView::GetDocument() const
 }
 #endif //_DEBUG
 
-
 // CPrinterHubView message handlers
 
 void CPrinterHubView::OnBnClickedButton8()
@@ -312,7 +312,7 @@ void CPrinterHubView::OnBnClickedButtonAdd()
 		int int_warrantyMonth = dlg.int_WarrantyMonth;
 
 		Printer printer(str_id, str_model, brand, status, str_purchaseDate, int_warrantyMonth);
-		pDoc->AddPrinter(printer);
+		pDoc->AddPrinter(printer, 1);
 	}
 }
 
@@ -406,16 +406,19 @@ void CPrinterHubView::AddPrinterToList(
 	int nIndex = m_listPrinters.GetItemCount();
 
 	// Cột 0: ID máy in
-	m_listPrinters.InsertItem(nIndex, strId);
+	CString strValue;
+	strValue.Format(_T("%d"), nIndex);
 
-	m_listPrinters.SetItemText(nIndex, 1, strModel);
-	m_listPrinters.SetItemText(nIndex, 2, strBrand);
-	m_listPrinters.SetItemText(nIndex, 3, strStatus);
-	m_listPrinters.SetItemText(nIndex, 4, strPurchaseDate);
+	m_listPrinters.InsertItem(nIndex, strValue);
+	m_listPrinters.SetItemText(nIndex,1, strId);
+	m_listPrinters.SetItemText(nIndex, 2, strModel);
+	m_listPrinters.SetItemText(nIndex, 3, strBrand);
+	m_listPrinters.SetItemText(nIndex, 4, strStatus);
+	m_listPrinters.SetItemText(nIndex, 5, strPurchaseDate);
 
 	CString strWarrantyMonth;
 	strWarrantyMonth.Format(_T("%d"), intWarrantyMonth);
-	m_listPrinters.SetItemText(nIndex, 5, strWarrantyMonth);
+	m_listPrinters.SetItemText(nIndex, 6, strWarrantyMonth);
 
 
 

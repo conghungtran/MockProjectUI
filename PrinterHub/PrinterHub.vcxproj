@@ -196,6 +196,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ui\component\CCustomEdit.h" />
     <ClInclude Include="src\ui\component\CCustomButton.h" />
     <ClInclude Include="src\io\CsvWriter.h" />
     <ClInclude Include="src\io\CsvReader.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="src\core\PrinterConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\component\CCustomEdit.cpp" />
     <ClCompile Include="src\ui\component\CCustomButton.cpp" />
     <ClCompile Include="src\io\CsvWriter.cpp" />
     <ClCompile Include="src\io\CsvReader.cpp" />
