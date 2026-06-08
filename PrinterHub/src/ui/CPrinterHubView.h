@@ -61,9 +61,15 @@ public:
 	CListCtrl m_listPrinters;
 
 
-	void AddPrinterToList(const CString& strName, const CString& strIP, int nPort);
-	void RefreshPrintersList();  // Nếu dùng database
-	
+
+	void DeletePrinterFromList(int nIndex);
+
+	//void RefreshPrintersList();
+
+	//void UpdateUndoRedoButtons();
+
+	//void UpdateStatusBar();
+
 	void InitializeListControl();
 
 	void AddPrinterToList(
