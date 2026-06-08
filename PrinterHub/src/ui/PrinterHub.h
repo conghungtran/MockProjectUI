@@ -24,6 +24,7 @@ public:
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
+	CString PrinterHubApp::GetCSVFilePath();
 
 // Implementation
 	BOOL  m_bHiColorIcons;

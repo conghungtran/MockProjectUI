@@ -42,10 +42,10 @@ BOOL CAddPrinterDlg::OnInitDialog()
         // Đổi text nút OK thành "Update"
         //GetDlgItem(IDOK)->SetWindowText(_T("&Update"));
 
-		std::cout << "Edit Mode\n";
-		std::cout << "Brand: " << CT2A(cstr_Brand) << "\n";
-		std::cout << "Status: " << CT2A(cstr_Status) << "\n";
-         // Load Brands
+        std::cout << "Edit Mode\n";
+        std::cout << "Brand: " << CT2A(cstr_Brand) << "\n";
+        std::cout << "Status: " << CT2A(cstr_Status) << "\n";
+        // Load Brands
         m_cboBrand.AddString(_T("HP"));
         m_cboBrand.AddString(_T("CANON"));
         m_cboBrand.AddString(_T("EPSON"));
@@ -228,7 +228,6 @@ void CAddPrinterDlg::GetPrinter(PrinterHub::Core::Printer& printer) const
 
     // Chuyển đổi dữ liệu
     std::string str_id = ConvertData::CStringToString(cstr_Id);
-    std::cout << "1111GetPrinter: " << str_id << "\n";
     std::string str_model = ConvertData::CStringToString(cstr_Model);
     std::string str_purchaseDate = ConvertData::CStringToString(cstr_PurchaseDate);
 

@@ -42,6 +42,8 @@ BEGIN_MESSAGE_MAP(CPrinterHubView, CFormView)
 
 	ON_BN_CLICKED(IDC_BUTTON_PRINTER_EDIT_PRINTER, &CPrinterHubView::OnBnClickedButtonPrinterEditPrinter)
 	ON_BN_CLICKED(IDC_BUTTON_PRINTER_DELETE_PRINTER, &CPrinterHubView::OnBnClickedButtonPrinterDeletePrinter)
+	//ON_BN_CLICKED(IDC_BUTTON_PRINTER_UNDO, &CPrinterHubView::OnBnClickedButtonPrinterUndo)
+	//ON_BN_CLICKED(IDC_BUTTON_PRINTER_REDO, &CPrinterHubView::OnBnClickedButtonPrinterRedo)
 END_MESSAGE_MAP()
 
 // CPrinterHubView construction/destruction
@@ -106,7 +108,7 @@ void CPrinterHubView::InitializeListControl() {
 	//m_listPrinters.SetItemText(nItem, 5, _T("7"));
 
 
-	LoadFile();
+	//LoadFile();
 
 	// Firmware queue mẫu
 	m_listFirmWare.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
@@ -140,77 +142,77 @@ void CPrinterHubView::InitializeListControl() {
 }
 
 
-void CPrinterHubView::LoadFile()
-{
-	CPrinterHubDoc* pDoc = GetDocument();
-	if (!pDoc) return;
-
-	// In ra thư mục làm việc hiện tại
-	TCHAR szCurrentDir[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, szCurrentDir);
-	std::cout << "Current working directory: " << CT2A(szCurrentDir) << std::endl;
-
-	// ✅ Đường dẫn đúng - vì working directory là gốc project
-	CString strFilePath = _T("printers.csv");
-
-	// Kiểm tra file tồn tại
-	if (GetFileAttributes(strFilePath) == INVALID_FILE_ATTRIBUTES)
-	{
-		std::cout << "File not found: " << CT2A(strFilePath) << std::endl;
-
-		// Thử các đường dẫn khác để debug
-		CString strFilePath2 = _T("../data/printers.csv");
-		CString strFilePath3 = _T("printers.csv");
-
-		if (GetFileAttributes(strFilePath2) != INVALID_FILE_ATTRIBUTES)
-		{
-			strFilePath = strFilePath2;
-			std::cout << "Found with forward slash: " << CT2A(strFilePath2) << std::endl;
-		}
-		else if (GetFileAttributes(strFilePath3) != INVALID_FILE_ATTRIBUTES)
-		{
-			strFilePath = strFilePath3;
-			std::cout << "Found with .\\ : " << CT2A(strFilePath3) << std::endl;
-		}
-		else
-		{
-			// Liệt kê thư mục data để kiểm tra
-			std::cout << "Listing data directory:" << std::endl;
-			CString strDataPath = _T("data\\*.*");
-			WIN32_FIND_DATA findData;
-			HANDLE hFind = FindFirstFile(strDataPath, &findData);
-			if (hFind != INVALID_HANDLE_VALUE)
-			{
-				do
-				{
-					std::cout << "  " << CT2A(findData.cFileName) << std::endl;
-				} while (FindNextFile(hFind, &findData));
-				FindClose(hFind);
-			}
-			else
-			{
-				std::cout << "Cannot open data directory!" << std::endl;
-			}
-
-			AfxMessageBox(_T("Cannot find printers.csv in data folder!"));
-			return;
-		}
-	}
-
-	std::cout << "Loading from: " << CT2A(strFilePath) << std::endl;
-
-	// Gọi hàm load
-	if (pDoc->LoadPrintersFromCSV(strFilePath, pDoc))
-	{
-		std::cout << "Loaded printers from CSV successfully.\n";
-		//RefreshPrintersList();
-	}
-	else
-	{
-		std::cout << "Failed to load printers from CSV.\n";
-	}
-}
-
+//void CPrinterHubView::LoadFile()
+//{
+//	CPrinterHubDoc* pDoc = GetDocument();
+//	if (!pDoc) return;
+//
+//	// In ra thư mục làm việc hiện tại
+//	TCHAR szCurrentDir[MAX_PATH];
+//	GetCurrentDirectory(MAX_PATH, szCurrentDir);
+//	std::cout << "Current working directory: " << CT2A(szCurrentDir) << std::endl;
+//
+//	// ✅ Đường dẫn đúng - vì working directory là gốc project
+//	CString strFilePath = _T("printers.csv");
+//
+//	// Kiểm tra file tồn tại
+//	if (GetFileAttributes(strFilePath) == INVALID_FILE_ATTRIBUTES)
+//	{
+//		std::cout << "File not found: " << CT2A(strFilePath) << std::endl;
+//
+//		// Thử các đường dẫn khác để debug
+//		CString strFilePath2 = _T("../data/printers.csv");
+//		CString strFilePath3 = _T("printers.csv");
+//
+//		if (GetFileAttributes(strFilePath2) != INVALID_FILE_ATTRIBUTES)
+//		{
+//			strFilePath = strFilePath2;
+//			std::cout << "Found with forward slash: " << CT2A(strFilePath2) << std::endl;
+//		}
+//		else if (GetFileAttributes(strFilePath3) != INVALID_FILE_ATTRIBUTES)
+//		{
+//			strFilePath = strFilePath3;
+//			std::cout << "Found with .\\ : " << CT2A(strFilePath3) << std::endl;
+//		}
+//		else
+//		{
+//			// Liệt kê thư mục data để kiểm tra
+//			std::cout << "Listing data directory:" << std::endl;
+//			CString strDataPath = _T("data\\*.*");
+//			WIN32_FIND_DATA findData;
+//			HANDLE hFind = FindFirstFile(strDataPath, &findData);
+//			if (hFind != INVALID_HANDLE_VALUE)
+//			{
+//				do
+//				{
+//					std::cout << "  " << CT2A(findData.cFileName) << std::endl;
+//				} while (FindNextFile(hFind, &findData));
+//				FindClose(hFind);
+//			}
+//			else
+//			{
+//				std::cout << "Cannot open data directory!" << std::endl;
+//			}
+//
+//			AfxMessageBox(_T("Cannot find printers.csv in data folder!"));
+//			return;
+//		}
+//	}
+//
+//	std::cout << "Loading from: " << CT2A(strFilePath) << std::endl;
+//
+//	// Gọi hàm load
+//	if (pDoc->LoadPrintersFromCSV(strFilePath, pDoc))
+//	{
+//		std::cout << "Loaded printers from CSV successfully.\n";
+//		//RefreshPrintersList();
+//	}
+//	else
+//	{
+//		std::cout << "Failed to load printers from CSV.\n";
+//	}
+//}
+//
 
 void CPrinterHubView::OnFilePrintPreview()
 {
@@ -312,7 +314,7 @@ void CPrinterHubView::OnBnClickedButtonAdd()
 		int int_warrantyMonth = dlg.int_WarrantyMonth;
 
 		Printer printer(str_id, str_model, brand, status, str_purchaseDate, int_warrantyMonth);
-		pDoc->AddPrinter(printer, 1);
+		pDoc->AddPrinter(printer);
 	}
 }
 
@@ -322,7 +324,7 @@ void CPrinterHubView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	 CPrinterHubDoc* pDoc = GetDocument();
 
 	// Hàm này được gọi tự động sau khi Document chạy UpdateAllViews
-	if (lHint == DocumentStatus::PRINTER_CREATE)
+	if (lHint == DocumentStatus::PRINTER_ADDED)
 	{
 		//PrinterHub::Core::Printer* _printer = (PrinterHub::Core::Printer*)object;
 
@@ -347,7 +349,7 @@ void CPrinterHubView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 
 		std::cout << "CPrinterHubView::OnUpdate called with lHint = " << lHint << std::endl;
 	}
-	else if (lHint == DocumentStatus::PRINTER_UPDATE)
+	else if (lHint == DocumentStatus::PRINTER_UPDATED)
 	{
 		int nIndex = (int)(INT_PTR)pHint;  // Ép từ CObject* về int
 		UpdatePrinterInList(nIndex, pDoc->GetPrinter(nIndex));
@@ -478,7 +480,7 @@ void CPrinterHubView::OnBnClickedButtonPrinterEditPrinter()
 		std::cout << "Model: " << printer.getModel() << std::endl;
 		std::cout << "Warranty Month: " << printer.getWarrantyMonth() << std::endl;
 		CPrinterHubDoc* pDoc = GetDocument();
-		pDoc->EditPrinter(nSel, printer);
+		//pDoc->EditPrinter(nSel, printer);
 
 
 		std::cout << "Edited \n";
@@ -496,3 +498,94 @@ void CPrinterHubView::OnBnClickedButtonPrinterDeletePrinter()
 		AfxMessageBox(_T("Vui lòng chọn máy in cần xóa!"));
 
 }
+
+// CPrinterHubView.cpp
+//
+//void CPrinterHubView::OnBnClickedButtonPrinterUndo()
+//{
+//	// Lấy Document
+//	CPrinterHubDoc* pDoc = GetDocument();
+//	if (!pDoc) {
+//		TRACE(_T("OnBnClickedButtonPrinterUndo: No document\n"));
+//		return;
+//	}
+//
+//	// Kiểm tra xem có thể Undo không
+//	if (!pDoc->CanUndo()) {
+//		TRACE(_T("OnBnClickedButtonPrinterUndo: Cannot undo\n"));
+//
+//		// Optional: Hiển thị tooltip hoặc message
+//		// AfxMessageBox(_T("Nothing to undo"), MB_ICONINFORMATION);
+//		return;
+//	}
+//
+//	// Thực hiện Undo
+//	pDoc->Undo();
+//
+//	// Refresh hiển thị
+//	RefreshPrintersList();
+//
+//	// Cập nhật trạng thái nút Undo/Redo (optional)
+//	//UpdateUndoRedoButtons();
+//
+//	// Log
+//	TRACE(_T("Undo performed\n"));
+//}
+//
+//void CPrinterHubView::OnBnClickedButtonPrinterRedo()
+//{
+//	// Lấy Document
+//	CPrinterHubDoc* pDoc = GetDocument();
+//	if (!pDoc) {
+//		TRACE(_T("OnBnClickedButtonPrinterRedo: No document\n"));
+//		return;
+//	}
+//
+//	// Kiểm tra xem có thể Redo không
+//	if (!pDoc->CanRedo()) {
+//		TRACE(_T("OnBnClickedButtonPrinterRedo: Cannot redo\n"));
+//
+//		// Optional: Hiển thị tooltip
+//		// AfxMessageBox(_T("Nothing to redo"), MB_ICONINFORMATION);
+//		return;
+//	}
+//
+//	// Thực hiện Redo
+//	pDoc->Redo();
+//
+//	// Refresh hiển thị
+//	RefreshPrintersList();
+//
+//	// Cập nhật trạng thái nút Undo/Redo (optional)
+//	//UpdateUndoRedoButtons();
+//
+//	// Log
+//	TRACE(_T("Redo performed\n"));
+//}
+//
+
+
+//
+//// Optional: Cập nhật trạng thái nút Undo/Redo (enable/disable)
+//void CPrinterHubView::UpdateUndoRedoButtons()
+//{
+//	CPrinterHubDoc* pDoc = GetDocument();
+//	if (!pDoc) return;
+//
+//	// Lấy button từ toolbar hoặc dialog
+//	// Cách 1: Nếu dùng toolbar button
+//	// CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+//	// CToolBar& toolbar = pMainFrame->GetToolBar();
+//	// toolbar.EnableButton(ID_BUTTON_UNDO, pDoc->CanUndo());
+//	// toolbar.EnableButton(ID_BUTTON_REDO, pDoc->CanRedo());
+//
+//	// Cách 2: Nếu dùng button trên dialog
+//	// GetDlgItem(IDC_BUTTON_UNDO)->EnableWindow(pDoc->CanUndo());
+//	// GetDlgItem(IDC_BUTTON_REDO)->EnableWindow(pDoc->CanRedo());
+//
+//	// Cách 3: Cập nhật text trên status bar
+//	// CStatusBar* pStatusBar = ...;
+//	// CString strUndo;
+//	// strUndo.Format(_T("Undo: %s"), pDoc->CanUndo() ? _T("Available") : _T("Not available"));
+//	// pStatusBar->SetPaneText(0, strUndo);
+//}

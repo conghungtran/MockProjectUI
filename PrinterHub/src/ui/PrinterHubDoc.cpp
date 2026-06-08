@@ -22,6 +22,10 @@
 #include "io/CsvWriter.h"
 #include "core/ConvertData.h"
 #include "core/Enumconverter.h"
+#include "../core/CommandPattern/AddPrinterCommand.h"
+#include "../core/CommandPattern/EditPrinterCommand.h"
+#include "../core/CommandPattern/DeletePrinterCommand.h"
+
 
 using namespace PrinterHub::Core;
 
@@ -32,214 +36,154 @@ IMPLEMENT_DYNCREATE(CPrinterHubDoc, CDocument)
 BEGIN_MESSAGE_MAP(CPrinterHubDoc, CDocument)
 END_MESSAGE_MAP()
 
-
 // CPrinterHubDoc construction/destruction
 
-CPrinterHubDoc::CPrinterHubDoc() noexcept
+CPrinterHubDoc::CPrinterHubDoc() noexcept : m_manager(std::make_shared<PrinterManager>())  // ✅ Khởi tạo ngay
 {
-	// TODO: add one-time construction code here
+	// Document đăng ký làm observer của PrinterManager
+	m_manager.get()->Attach(this);
 
-}
-//
-void CPrinterHubDoc::AddPrinter(const PrinterHub::Core::Printer& printer, int mode = 0) {
-	if (printer.getId().empty()) {
-		std::cout << "CPrinterHubDoc::AddPrinter: printer ID is empty\n";
-		return;
-	}
-
-	// 1. Xử lý logic / Thêm dữ liệu vào bộ nhớ tạm của Document
-	int nIndex = m_arrPrinters.GetSize();
-	std::cout << "CPrinterHubDoc:Index: " << nIndex << std::endl;
-	m_arrPrinters.Add(printer);
-	SetModifiedFlag(TRUE);
-
-	// 2. Save Data
-    if (mode == 1) {
-        std::cout << "Adding printer to CSV: \n";
-        AppendPrinterToCSV(printer, _T("printers.csv"));
-    }
-   
-
-	
-
-	// 3. GỌI UPDATEALLVIEWS ĐỂ BÁO CHO VIEW BIẾT DATA ĐÃ THAY ĐỔI
-	// NULL nghĩa là báo cho TẤT CẢ các View đang gắn với Document này
-	UpdateAllViews(NULL, DocumentStatus::PRINTER_CREATE, (CObject*)(INT_PTR)nIndex);
-}
-
-void CPrinterHubDoc::EditPrinter(int index, PrinterHub::Core::Printer& printer) {
-
-	std::cout << printer.getId() << std::endl;
-	std::cout << printer.getModel() << std::endl;
-
-	m_arrPrinters[index] = printer;
-
-
-	std::cout << "CPrinterHubDoc:Index: " << index << std::endl;
-	SetModifiedFlag(TRUE);
-
-	// 2. (Tùy chọn) Lưu dữ liệu vào Database tại đây nếu cần
-	
-    UpdatePrinterInCSV(_T("printers.csv"), index, printer);
-
-	// 3. GỌI UPDATEALLVIEWS ĐỂ BÁO CHO VIEW BIẾT DATA ĐÃ THAY ĐỔI
-	// NULL nghĩa là báo cho TẤT CẢ các View đang gắn với Document này
-	UpdateAllViews(NULL, DocumentStatus::PRINTER_UPDATE, (CObject*)(INT_PTR)index);
-}
-
-// Đọc danh sách Printer từ CSV
-bool CPrinterHubDoc::LoadPrintersFromCSV(const CString& strFilePath, CPrinterHubDoc* pDoc)
-{
-    using namespace PrinterHub::Core;
-
-    CsvReader reader;
-    reader.SetDelimiter(_T(','));
-    reader.SetHasHeader(true);  // Dòng đầu là header
-
-    std::vector<std::vector<CString>> data;
-    if (!reader.ReadAll(strFilePath, data))
-    {
-        AfxMessageBox(_T("Cannot load printers from CSV"));
-        return false;
-    }
-
-    for (const auto& row : data)
-    {
-        if (row.size() >= 6)
-        {
-            Printer printer(
-                ConvertData::CStringToString(row[0]),  // ID
-                ConvertData::CStringToString(row[1]),  // Model
-                EnumConverter::ToPrinterBrand(row[2]), // Brand
-                EnumConverter::ToPrinterStatus(row[3]),// Status
-                ConvertData::CStringToString(row[4]),  // Purchase Date
-                _ttoi(row[5])                          // Warranty Month
-            );
-            pDoc->AddPrinter(printer);
-        }
-    }
-
-    return true;
-}
-
-// Trong CPrinterHubDoc.cpp
-bool CPrinterHubDoc::AppendPrinterToCSV(const Printer& printer, const CString& strFilePath)
-{
-    CStdioFile file;
-
-    // Mở file ở chế độ append (ghi tiếp vào cuối)
-    if (!file.Open(strFilePath, CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate))
-    {
-        TRACE(_T("Cannot open file for append: %s\n"), strFilePath);
-        return false;
-    }
-
-    // Di chuyển con trỏ đến cuối file
-    file.SeekToEnd();
-
-    // Format dòng dữ liệu mới
-    CString strLine;
-    strLine.Format(_T("%s,%s,%s,%s,%s,%d\n"),
-        CString(printer.getId().c_str()),
-        CString(printer.getModel().c_str()),
-        EnumConverter::FromPrinterBrand(printer.getBrand()),
-        EnumConverter::FromPrinterStatus(printer.getStatus()),
-        CString(printer.getPurchaseDate().c_str()),
-        printer.getWarrantyMonth());
-
-    // Ghi xuống file
-    file.WriteString(strLine);
-    file.Close();
-
-    TRACE(_T("Appended printer to CSV: %s\n"), printer.getId().c_str());
-    return true;
-}
-
-// Ghi danh sách Printer xuống CSV
-bool CPrinterHubDoc::SavePrintersToCSV(const CString& strFilePath, CPrinterHubDoc* pDoc)
-{
-    using namespace PrinterHub::Core;
-
-    CsvWriter writer;
-    writer.SetDelimiter(_T(','));
-    writer.SetQuoteStrings(true);  // Tự động thêm quotes khi cần
-
-    // Ghi header
-    std::vector<CString> header = { _T("ID"), _T("Model"), _T("Brand"),
-                                   _T("Status"), _T("PurchaseDate"), _T("WarrantyMonth") };
-    if (!writer.WriteHeader(strFilePath, header, true))
-    {
-        return false;
-    }
-
-    // Ghi dữ liệu
-    for (int i = 0; i < pDoc->GetPrinterCount(); i++)
-    {
-        const auto& printer = pDoc->GetPrinter(i);
-
-        std::vector<CString> row;
-        row.push_back(CString(printer.getId().c_str()));
-        row.push_back(CString(printer.getModel().c_str()));
-        row.push_back(EnumConverter::FromPrinterBrand(printer.getBrand()));
-        row.push_back(EnumConverter::FromPrinterStatus(printer.getStatus()));
-        row.push_back(CString(printer.getPurchaseDate().c_str()));
-
-        CString strWarranty;
-        strWarranty.Format(_T("%d"), printer.getWarrantyMonth());
-        row.push_back(strWarranty);
-
-        if (!writer.AppendRow(strFilePath, row))
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-// Cập nhật một dòng cụ thể
-bool CPrinterHubDoc::UpdatePrinterInCSV(const CString& strFilePath, int nRowIndex, const Printer& printer)
-{
-    using namespace PrinterHub::Core;
-
-    CsvWriter writer;
-    writer.SetDelimiter(_T(','));
-
-    std::vector<CString> row;
-    row.push_back(CString(printer.getId().c_str()));
-    row.push_back(CString(printer.getModel().c_str()));
-    row.push_back(EnumConverter::FromPrinterBrand(printer.getBrand()));
-    row.push_back(EnumConverter::FromPrinterStatus(printer.getStatus()));
-    row.push_back(CString(printer.getPurchaseDate().c_str()));
-
-    CString strWarranty;
-    strWarranty.Format(_T("%d"), printer.getWarrantyMonth());
-    row.push_back(strWarranty);
-
-    // Cập nhật dòng thứ nRowIndex (bỏ qua header)
-    return writer.UpdateRow(strFilePath, nRowIndex, row, true);
-}
-
-const PrinterHub::Core::Printer& CPrinterHubDoc::GetPrinter(int nIndex) const
-{
-	ASSERT(nIndex >= 0 && nIndex < m_arrPrinters.GetSize());
-	return m_arrPrinters[nIndex];  // ← Trả về const reference
-}
-
-void CPrinterHubDoc::UpdatePrinter(int nIndex, const PrinterHub::Core::Printer& printer) {
-	UpdateAllViews(NULL, DocumentStatus::PRINTER_UPDATE, NULL);
-}
-
-void CPrinterHubDoc::DeletePrinter(int nIndex) {
-	UpdateAllViews(NULL, DocumentStatus::PRINTER_DELETE, NULL);
-}
-
-void CPrinterHubDoc::DeleteAllPrinters() {
-	UpdateAllViews(NULL, DocumentStatus::PRINTER_DELETE_ALL, NULL);
 }
 
 CPrinterHubDoc::~CPrinterHubDoc()
 {
+	m_manager.get()->Detach(this);
+}
+
+void CPrinterHubDoc::SetPrinterManager(std::shared_ptr<PrinterManager> manager)
+{
+	m_manager = manager;
+	if (m_manager) {
+		m_manager->Attach(this);
+	}
+}
+
+void CPrinterHubDoc::SetRepository(std::shared_ptr<IPrinterRepository> repository)
+{
+	if (m_manager) {
+		m_manager->SetRepository(repository);
+	}
+}
+
+bool CPrinterHubDoc::LoadFromStorage()
+{
+	// ✅ Kiểm tra m_manager có null không
+	if (!m_manager) {
+		std::cout << "CPrinterHubDoc::LoadFromStorage: m_manager is null\n";
+		return false;
+	}
+
+	if (!m_manager->GetRepository()) {
+		std::cout << "CPrinterHubDoc::LoadFromStorage: No repository set\n";
+		return false;
+	}
+
+	std::vector<Printer> printers;
+	if (m_manager->GetRepository()->Load(printers)) {
+		// Clear and reload
+
+		std::cout << "CPrinterHubDoc::LoadFromStorage: Loaded printers: " << printers.size() << "\n";
+		m_manager->ClearAll();
+		for (const auto& printer : printers) {
+			std::cout << printer.getModel() << std::endl;
+			m_manager->LoadPrinter(printer);
+		}
+		return true;
+	}
+	return false;
+}
+
+bool CPrinterHubDoc::SaveToStorage()
+{
+	if (!m_manager.get()->GetRepository()) return false;
+	return m_manager.get()->GetRepository()->Save(m_manager.get()->GetAllPrinters());
+}
+
+void CPrinterHubDoc::AddPrinter(const Printer& printer)
+{
+	if (!m_manager) return;
+
+	auto command = std::make_unique<AddPrinterCommand>(m_manager.get(), printer);
+	m_manager->ExecuteCommand(std::move(command));
+}
+
+void CPrinterHubDoc::UpdatePrinter(int index, const Printer& newPrinter)
+{
+	if (!m_manager) return;
+
+	const Printer& oldPrinter = m_manager->GetPrinter(index);
+	auto command = std::make_unique<EditPrinterCommand>(
+		m_manager.get(), index, oldPrinter, newPrinter);
+	m_manager->ExecuteCommand(std::move(command));
+}
+
+void CPrinterHubDoc::DeletePrinter(int index)
+{
+	if (!m_manager) return;
+
+	const Printer& printer = m_manager->GetPrinter(index);
+	auto command = std::make_unique<DeletePrinterCommand>(
+		m_manager.get(), index, printer);
+	m_manager->ExecuteCommand(std::move(command));
+}
+
+void CPrinterHubDoc::ClearAllPrinters()
+{
+	m_manager.get()->ClearAll();
+}
+
+const Printer& CPrinterHubDoc::GetPrinter(int index) const
+{
+	return m_manager.get()->GetPrinter(index);
+}
+
+int CPrinterHubDoc::GetPrinterCount() const
+{
+	return m_manager.get()->GetPrinterCount();
+}
+
+void CPrinterHubDoc::Undo()
+{
+	if (m_manager) m_manager->Undo();
+}
+
+void CPrinterHubDoc::Redo()
+{
+	if (m_manager) m_manager->Redo();
+}
+
+bool CPrinterHubDoc::CanUndo() const
+{
+	return m_manager ? m_manager->CanUndo() : false;
+}
+
+bool CPrinterHubDoc::CanRedo() const
+{
+	return m_manager ? m_manager->CanRedo() : false;
+}
+
+void CPrinterHubDoc::OnPrinterChanged(PrinterEvent event, int index)
+{
+	// Chuyển đổi event thành hint cho View
+	LPARAM lHint = 0;
+	switch (event)
+	{
+	case PrinterEvent::PrinterAdded:
+		lHint = DocumentStatus::PRINTER_ADDED;
+		break;
+	case PrinterEvent::PrinterUpdated:
+		lHint = DocumentStatus::PRINTER_UPDATED;
+		break;
+	case PrinterEvent::PrinterDeleted:
+		lHint = DocumentStatus::PRINTER_DELETED;
+		break;
+	case PrinterEvent::PrintersCleared:
+		lHint = DocumentStatus::PRINTERS_CLEARED;
+		break;
+	}
+
+	// Thông báo cho View
+	UpdateAllViews(nullptr, lHint, (CObject*)(INT_PTR)index);
 }
 
 BOOL CPrinterHubDoc::OnNewDocument()

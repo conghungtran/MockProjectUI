@@ -196,6 +196,17 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\CommandPattern\AddPrinterCommand.h" />
+    <ClInclude Include="src\core\CommandPattern\DeletePrinterCommand.h" />
+    <ClInclude Include="src\core\CommandPattern\EditPrinterCommand.h" />
+    <ClInclude Include="src\core\CommandPattern\ICommand.h" />
+    <ClInclude Include="src\core\PrinterError.h" />
+    <ClInclude Include="src\core\PrinterManager.h" />
+    <ClInclude Include="src\core\IObserver.h" />
+    <ClInclude Include="src\core\repository\CSVPrinterRepository.h" />
+    <ClInclude Include="src\core\repository\IPrinterRepository.h" />
+    <ClInclude Include="src\core\repository\MockPrinterRepository.h" />
+    <ClInclude Include="src\core\repository\pch.h" />
     <ClInclude Include="src\ui\component\CCustomEdit.h" />
     <ClInclude Include="src\ui\component\CCustomButton.h" />
     <ClInclude Include="src\io\CsvWriter.h" />
@@ -219,6 +230,8 @@
     <ClInclude Include="src\core\PrinterConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\PrinterManager.cpp" />
+    <ClCompile Include="src\core\repository\CSVPrinterRepository.cpp" />
     <ClCompile Include="src\ui\component\CCustomEdit.cpp" />
     <ClCompile Include="src\ui\component\CCustomButton.cpp" />
     <ClCompile Include="src\io\CsvWriter.cpp" />
@@ -249,6 +262,7 @@
     <Image Include="src\ui\res\userimages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\printers.csv" />
     <None Include="printers.csv" />
     <None Include="src\ui\res\PrinterHub.rc2" />
   </ItemGroup>

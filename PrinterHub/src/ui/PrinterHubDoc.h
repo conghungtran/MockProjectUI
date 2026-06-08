@@ -5,11 +5,13 @@
 
 #pragma once
 #include "../core/Printer.h"
+#include "../core/PrinterManager.h"
+#include "../core/repository/IPrinterRepository.h"
 
 using namespace PrinterHub::Core;
 
 
-class CPrinterHubDoc : public CDocument
+class CPrinterHubDoc : public CDocument, public PrinterHub::Core::IObserver
 {
 protected: // create from serialization only
 	CPrinterHubDoc() noexcept;
@@ -17,36 +19,50 @@ protected: // create from serialization only
 
 // Attributes
 public:
-	CArray<PrinterHub::Core::Printer, PrinterHub::Core::Printer> m_arrPrinters;
+	//CArray<PrinterHub::Core::Printer, PrinterHub::Core::Printer> m_arrPrinters;
 // Operations
 public:
 
-	// CRUD operations
-	void AddPrinter(const PrinterHub::Core::Printer& printer, int mode);
-	void EditPrinter(int index, PrinterHub::Core::Printer& printer);
+	// Dependency Injection - Set repository
+	//void SetRepository(std::shared_ptr<IPrinterRepository> repository);
 
+	 // Delegate CRUD operations to PrinterManager
+	void AddPrinter(const PrinterHub::Core::Printer& printer);
+	void UpdatePrinter(int index, const PrinterHub::Core::Printer& printer);
+	void DeletePrinter(int index);
+	void ClearAllPrinters();
 
-	void UpdatePrinter(int nIndex, const PrinterHub::Core::Printer& printer);
-	void DeletePrinter(int nIndex);
-	void DeleteAllPrinters();
+	// Load/Save
+	bool LoadFromStorage();
+	bool SaveToStorage();
+
+	const PrinterHub::Core::Printer& GetPrinter(int index) const;
+	int GetPrinterCount() const;
+
+	// IObserver implementation
+	void OnPrinterChanged(PrinterHub::Core::PrinterEvent event, int index) override;
+
+	// For testing - get reference to manager
+	//PrinterManager& GetPrinterManager() { return m_manager; }
 	
-	const  PrinterHub::Core::Printer& GetPrinter(int nIndex) const;
-	//PrinterHub::Core::Printer& GetPrinter(int nIndex);
+	// Undo/Redo support
+	void Undo();
+	void Redo();
+	bool CanUndo() const;
+	bool CanRedo() const;
+	// Setter
 
-	int GetPrinterCount() const { return m_arrPrinters.GetSize(); }
-	
+	void SetPrinterManager(std::shared_ptr<PrinterManager> manager);
+	void SetRepository(std::shared_ptr<IPrinterRepository> repository);
+public:
+	std::shared_ptr<PrinterManager> m_manager;
+	//bool m_isDataModified;
 
-	// File IO
-	bool LoadPrintersFromCSV(const CString& strFilePath, CPrinterHubDoc* pDoc);
-	bool SavePrintersToCSV(const CString& strFilePath, CPrinterHubDoc* pDoc);
-	bool UpdatePrinterInCSV(const CString& strFilePath, int nRowIndex, const Printer& printer);
-	bool AppendPrinterToCSV(const Printer& printer, const CString& strFilePath);
-
-	
 // Overrides
 public:
 	virtual BOOL OnNewDocument();
 	virtual void Serialize(CArchive& ar);
+
 
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();

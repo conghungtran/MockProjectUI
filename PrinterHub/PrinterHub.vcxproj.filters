@@ -78,6 +78,39 @@
     <ClInclude Include="src\ui\component\CCustomEdit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\CommandPattern\AddPrinterCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\CommandPattern\DeletePrinterCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\CommandPattern\EditPrinterCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\CommandPattern\ICommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\PrinterManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\IObserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\repository\CSVPrinterRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\repository\IPrinterRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\repository\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\repository\MockPrinterRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\PrinterError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ui\PrinterHub.cpp">
@@ -119,6 +152,12 @@
     <ClCompile Include="src\ui\component\CCustomEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\PrinterManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\repository\CSVPrinterRepository.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\ui\PrinterHub.rc">
@@ -147,5 +186,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="printers.csv" />
+    <None Include="data\printers.csv" />
   </ItemGroup>
 </Project>

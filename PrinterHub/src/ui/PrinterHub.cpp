@@ -16,6 +16,7 @@
 #define new DEBUG_NEW
 #endif
 #include <iostream>
+#include "../core/repository/CSVPrinterRepository.h"
 
 
 // PrinterHubApp
@@ -81,7 +82,7 @@ BOOL PrinterHubApp::InitInstance()
 	std::cout << "Welcome to MFC: \n" << std::endl;
 
 
-
+	
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
@@ -106,16 +107,6 @@ BOOL PrinterHubApp::InitInstance()
 
 	EnableTaskbarInteraction(FALSE);
 
-	// AfxInitRichEdit2() is required to use RichEdit control
-	// AfxInitRichEdit2();
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	// of your final executable, you should remove from the following
-	// the specific initialization routines you do not need
-	// Change the registry key under which our settings are stored
-	// TODO: You should modify this string to be something appropriate
-	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 	LoadStdProfileSettings(4);  // Load standard INI file options (including MRU)
 
@@ -130,8 +121,6 @@ BOOL PrinterHubApp::InitInstance()
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL,
 		RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
-	// Register the application's document templates.  Document templates
-	//  serve as the connection between documents, frame windows and views
 	CSingleDocTemplate* pDocTemplate;
 	pDocTemplate = new CSingleDocTemplate(
 		IDR_MAINFRAME,
@@ -147,17 +136,57 @@ BOOL PrinterHubApp::InitInstance()
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
-
-
-	// Dispatch commands specified on the command line.  Will return FALSE if
-	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
+
+	// 4. Inject repository into document (Dependency Injection!)
+	CFrameWnd* pMainFrame = (CFrameWnd*)m_pMainWnd;
+
+	CPrinterHubDoc* pDoc = (CPrinterHubDoc*)pMainFrame->GetActiveDocument();
+	if (pDoc) {
+		//auto manager = std::make_shared<PrinterManager>();
+		CString strFilePath = GetCSVFilePath(); // Lấy đường dẫn
+		auto repository = std::make_shared<CSVPrinterRepository>(strFilePath);
+
+		// 2. Inject repository vào manager
+		pDoc->m_manager->SetRepository(repository);
+
+		// 3. Inject manager vào document
+		//pDoc->SetPrinterManager(manager);
+
+		if (pDoc->LoadFromStorage()) {
+			std::cout << "LoadStorage Sucessful \n";
+		}
+		else {
+			std::cout << "Error LoadStorage Sucessful \n";
+		}
+		std::cout << "Load Repo Sucessful \n";
+	}
+	else {
+		std::cout << "Error for loading repo \n";
+	}
+
 
 	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
 	return TRUE;
+}
+
+CString PrinterHubApp::GetCSVFilePath()
+{
+	TCHAR szCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, szCurrentDir);
+
+	CString strFilePath;
+	strFilePath.Format(_T("%s\\data\\printers.csv"), szCurrentDir);
+
+	// Nếu không tìm thấy, thử lên 1 cấp
+	if (GetFileAttributes(strFilePath) == INVALID_FILE_ATTRIBUTES) {
+		strFilePath.Format(_T("%s\\..\\data\\printers.csv"), szCurrentDir);
+	}
+
+	return strFilePath;
 }
 
 int PrinterHubApp::ExitInstance()

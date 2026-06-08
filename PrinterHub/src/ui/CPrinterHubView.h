@@ -81,6 +81,8 @@ public:
 	afx_msg void OnLvnItemchangedList3(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedButtonPrinterEditPrinter();
 	afx_msg void OnBnClickedButtonPrinterDeletePrinter();
+	afx_msg void OnBnClickedButtonPrinterUndo();
+	afx_msg void OnBnClickedButtonPrinterRedo();
 };
 
 #ifndef _DEBUG  // debug version in CPrinterHubView.cpp
