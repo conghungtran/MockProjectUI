@@ -16,7 +16,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-#include "CAddPrinterDlg.h"
+#include "./dialog/CAddPrinterDlg.h"
 #include <iostream>
 
 #include "../core/Printer.h"
@@ -347,15 +347,15 @@ void CPrinterHubView::UpdatePrinterInList(int nIndex, const Printer& printer)
 {
 	std::cout << "CPrinterHubView::UpdatePrinterInList called with nIndex = " << nIndex << std::endl;
 	// ✅ Chỉ cập nhật item tại index, KHÔNG xóa toàn bộ
-	m_listPrinters.SetItemText(nIndex, 0, CString(printer.getId().c_str()));
-	m_listPrinters.SetItemText(nIndex, 1, CString(printer.getModel().c_str()));
-	m_listPrinters.SetItemText(nIndex, 2, EnumConverter::FromPrinterBrand(printer.getBrand()));
-	m_listPrinters.SetItemText(nIndex, 3, EnumConverter::FromPrinterStatus(printer.getStatus()));
-	m_listPrinters.SetItemText(nIndex, 4, CString(printer.getPurchaseDate().c_str()));
+	m_listPrinters.SetItemText(nIndex, 1, CString(printer.getId().c_str()));
+	m_listPrinters.SetItemText(nIndex, 2, CString(printer.getModel().c_str()));
+	m_listPrinters.SetItemText(nIndex, 3, EnumConverter::FromPrinterBrand(printer.getBrand()));
+	m_listPrinters.SetItemText(nIndex, 4, EnumConverter::FromPrinterStatus(printer.getStatus()));
+	m_listPrinters.SetItemText(nIndex, 5, CString(printer.getPurchaseDate().c_str()));
 
 	CString strWarranty;
 	strWarranty.Format(_T("%d"), printer.getWarrantyMonth());
-	m_listPrinters.SetItemText(nIndex, 5, strWarranty);
+	m_listPrinters.SetItemText(nIndex, 6, strWarranty);
 }
 
 void CPrinterHubView::OnDraw(CDC* pDC)
@@ -421,12 +421,12 @@ void CPrinterHubView::OnBnClickedButtonPrinterEditPrinter()
 	std::cout << "Selected item index: " << nSel << std::endl;
 
 	// Cách 1: Lấy text từ cột 0 (cột đầu tiên)
-	CString str_id = m_listPrinters.GetItemText(nSel, 0);
-	CString str_model = m_listPrinters.GetItemText(nSel, 1);
-	CString str_brand = m_listPrinters.GetItemText(nSel, 2);
-	CString str_status = m_listPrinters.GetItemText(nSel, 3);
-	CString str_purchaseDate = m_listPrinters.GetItemText(nSel, 4);
-	CString str_warrantyMonth = m_listPrinters.GetItemText(nSel, 5);
+	CString str_id = m_listPrinters.GetItemText(nSel, 1);
+	CString str_model = m_listPrinters.GetItemText(nSel, 2);
+	CString str_brand = m_listPrinters.GetItemText(nSel, 3);
+	CString str_status = m_listPrinters.GetItemText(nSel, 4);
+	CString str_purchaseDate = m_listPrinters.GetItemText(nSel, 5);
+	CString str_warrantyMonth = m_listPrinters.GetItemText(nSel, 6);
 
 	std::cout << "Selected Printer Info:\n";
 	std::cout << "ID: " << CT2A(str_id) << std::endl;
@@ -457,12 +457,11 @@ void CPrinterHubView::OnBnClickedButtonPrinterEditPrinter()
 		std::cout << "Model: " << printer.getModel() << std::endl;
 		std::cout << "Warranty Month: " << printer.getWarrantyMonth() << std::endl;
 		CPrinterHubDoc* pDoc = GetDocument();
-		//pDoc->EditPrinter(nSel, printer);
+		pDoc->UpdatePrinter(nSel, printer);
 
 
 		std::cout << "Edited \n";
 
-		
 	}
 }
 

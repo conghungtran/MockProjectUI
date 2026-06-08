@@ -2,12 +2,12 @@
 //
 
 #include "pch.h"
-#include "PrinterHub.h"
+#include "../PrinterHub.h"
 #include "afxdialogex.h"
 #include "CAddPrinterDlg.h"
 #include <iostream>
-#include "../core/EnumConverter.h"
-#include "../core/ConvertData.h"
+#include "../../core/EnumConverter.h"
+#include "../../core/ConvertData.h"
 
 // CAddPrinterDlg dialog
 
@@ -38,6 +38,7 @@ BOOL CAddPrinterDlg::OnInitDialog()
 
     if (m_mode == ModeEdit)
     {
+        GetDlgItem(IDC_EDIT_ADD_PRINTER_ID)->EnableWindow(FALSE);
         SetWindowText(_T("Edit Printer"));
         // Đổi text nút OK thành "Update"
         //GetDlgItem(IDOK)->SetWindowText(_T("&Update"));
@@ -92,7 +93,6 @@ BOOL CAddPrinterDlg::OnInitDialog()
 		SetWindowText(_T("Add Printer"));
 		// Đổi text nút OK thành "Add and Continue"
 		//GetDlgItem(IDOK)->SetWindowText(_T("&Add and Continue"));
-
          // Load Brands
         m_cboBrand.AddString(_T("HP"));
         m_cboBrand.AddString(_T("CANON"));
@@ -119,9 +119,12 @@ BOOL CAddPrinterDlg::OnInitDialog()
     m_btnCustom.SetButtonFont(18, _T("Segoe UI"));
 
 
-    m_editCustom.SetPlaceholder(_T("Enter printer ID (e.g., PRN001)"));
-    m_editCustom.SetBorderColor(RGB(0, 120, 215));
+    m_editModel.SetPlaceholder(_T("Enter Model"));
+    m_editModel.SetBorderColor(RGB(0, 120, 215));
 
+
+    m_editId.SetPlaceholder(_T("Enter ID"));
+    m_editId.SetBorderColor(RGB(0, 120, 215));
 
 
     return TRUE;
@@ -154,8 +157,7 @@ CAddPrinterDlg::~CAddPrinterDlg()
 void CAddPrinterDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialogEx::DoDataExchange(pDX);
-    //DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_ID, m_editId);
-    DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_ID, m_editCustom);
+    DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_ID, m_editId);
 
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_MODEL, m_editModel);
     DDX_Control(pDX, IDC_EDIT_ADD_PRINTER_BRAND, m_cboBrand);

@@ -39,7 +39,7 @@
     <ClInclude Include="src\ui\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\CAddPrinterDlg.h">
+    <ClInclude Include="src\ui\dialog\CAddPrinterDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\core\ConvertData.h">
@@ -111,6 +111,9 @@
     <ClInclude Include="src\core\PrinterError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ui\dialog\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ui\PrinterHub.cpp">
@@ -128,7 +131,7 @@
     <ClCompile Include="src\ui\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\CAddPrinterDlg.cpp">
+    <ClCompile Include="src\ui\dialog\CAddPrinterDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\ConvertData.cpp">

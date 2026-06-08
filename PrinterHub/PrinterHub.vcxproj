@@ -213,12 +213,13 @@
     <ClInclude Include="src\io\CsvReader.h" />
     <ClInclude Include="src\core\pch.h" />
     <ClInclude Include="src\io\pch.h" />
-    <ClInclude Include="src\ui\CAddPrinterDlg.h" />
+    <ClInclude Include="src\ui\dialog\CAddPrinterDlg.h" />
     <ClInclude Include="src\core\ControllerStatus.h" />
     <ClInclude Include="src\core\ConvertData.h" />
     <ClInclude Include="src\ui\component\pch.h" />
     <ClInclude Include="src\ui\CPrinterHubView.h" />
     <ClInclude Include="src\core\EnumConverter.h" />
+    <ClInclude Include="src\ui\dialog\pch.h" />
     <ClInclude Include="src\ui\framework.h" />
     <ClInclude Include="src\ui\MainFrm.h" />
     <ClInclude Include="src\ui\pch.h" />
@@ -236,7 +237,7 @@
     <ClCompile Include="src\ui\component\CCustomButton.cpp" />
     <ClCompile Include="src\io\CsvWriter.cpp" />
     <ClCompile Include="src\io\CsvReader.cpp" />
-    <ClCompile Include="src\ui\CAddPrinterDlg.cpp" />
+    <ClCompile Include="src\ui\dialog\CAddPrinterDlg.cpp" />
     <ClCompile Include="src\core\ConvertData.cpp" />
     <ClCompile Include="src\ui\component\pch.cpp" />
     <ClCompile Include="src\ui\CPrinterHubView.cpp" />

@@ -1,8 +1,8 @@
 #pragma once
 #include "afxdialogex.h"
-#include "../core/Printer.h"
-#include "component/CCustomButton.h"
-#include "component/CCustomEdit.h"
+#include "../../core/Printer.h"
+#include "../component/CCustomButton.h"
+#include "../component/CCustomEdit.h"
 
 
 // CAddPrinterDlg dialog
@@ -51,8 +51,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CComboBox m_cboBrand;
-	//CEdit m_editId;
-	CEdit m_editModel;
+	//CEdit m_editModel;
 	CDateTimeCtrl m_dtpPurchaseDate;
 	CEdit m_editWarrantyMonth;
 	CComboBox m_cboStatus;
@@ -61,5 +60,7 @@ public:
 
 public:
 	CCustomButton m_btnCustom;
-	CCustomEdit m_editCustom;
+	CCustomEdit m_editId;
+
+	CCustomEdit m_editModel;
 };
