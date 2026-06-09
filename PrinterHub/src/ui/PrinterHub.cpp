@@ -166,6 +166,15 @@ BOOL PrinterHubApp::InitInstance()
 		std::cout << "Error for loading repo \n";
 	}
 
+	// Test
+	std::vector<int> arr = { 1, 2, 3, 4, 5 };
+
+	arr.erase(arr.begin() + 2); // Xóa phần tử tại index 2 (giá trị 3)
+
+	for (auto num : arr) {
+		std::cout << num << " "; // Output: 1 2 4 5
+	}
+	//Test
 
 	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);

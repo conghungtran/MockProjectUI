@@ -64,7 +64,7 @@ public:
 
 	void DeletePrinterFromList(int nIndex);
 
-	//void RefreshPrintersList();
+	void RefreshPrintersList();
 
 	//void UpdateUndoRedoButtons();
 

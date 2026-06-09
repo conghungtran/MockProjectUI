@@ -1,4 +1,3 @@
-// CSVPrinterRepository.cpp
 #include "pch.h"
 #include "CSVPrinterRepository.h"
 #include "../EnumConverter.h"
@@ -143,9 +142,13 @@ bool CSVPrinterRepository::Delete(int index)
     std::vector<Printer> printers;
     if (!Load(printers)) return false;
 
+	std::cout << "11111111" << printers[index].getId() << " - " << printers[index].getModel() << std::endl;
     if (index < 0 || index >= (int)printers.size()) return false;
     printers.erase(printers.begin() + index);
-
+	std::cout << "Deleted printer at index " << index << std::endl;
+    for (auto o : printers) {
+		std::cout << o.getId() << " - " << o.getModel() << std::endl;
+    }
     return Save(printers);
 }
 

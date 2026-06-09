@@ -52,7 +52,8 @@ void PrinterManager::executeDelete(int index)
     m_printers.erase(m_printers.begin() + index);
 
     if (m_repository) {
-        m_repository->Delete(index);
+        //m_repository->Delete(index);
+		m_repository->Save(m_printers);  // Cập nhật lại toàn bộ sau khi xóa
     }
 
     Notify(PrinterEvent::PrinterDeleted, index);
@@ -142,8 +143,35 @@ PrinterError PrinterManager::DeletePrinter(int index)
     // 2. Lưu lại printer để rollback nếu cần
     Printer deletedPrinter = m_printers[index];
 
+
+
+    std::cout << "Requested delete at index: " << index << std::endl;
+    std::string deletedId = m_printers[index].getId();
+    std::string deletedModel = m_printers[index].getModel();
+    std::cout << "Will delete: [" << index << "] "
+        << deletedId << " - " << deletedModel << std::endl;
+
+    // In ra tất cả index hiện tại
+    std::cout << "\nCurrent list (before delete):" << std::endl;
+    for (int i = 0; i < (int)m_printers.size(); i++) {
+        std::cout << "  Index " << i << ": "
+            << m_printers[i].getId() << " - "
+            << m_printers[i].getModel() << std::endl;
+    }
+
+
+	std::cout << "-------------------\n";
+
     // 3. Xóa khỏi bộ nhớ
     m_printers.erase(m_printers.begin() + index);
+
+    // In ra kết quả
+    std::cout << "\nList after delete:" << std::endl;
+    for (int i = 0; i < (int)m_printers.size(); i++) {
+        std::cout << "  Index " << i << ": "
+            << m_printers[i].getId() << " - "
+            << m_printers[i].getModel() << std::endl;
+    }
 
     // 4. Lưu xuống repository
     if (m_repository) {
@@ -164,6 +192,7 @@ PrinterError PrinterManager::DeletePrinter(int index)
 
     return PrinterError::Success;
 }
+
 
 PrinterError PrinterManager::DeletePrinterById(const std::string& id)
 {

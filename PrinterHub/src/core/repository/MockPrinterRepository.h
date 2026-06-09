@@ -1,4 +1,3 @@
-// MockPrinterRepository.h
 #pragma once
 #include "IPrinterRepository.h"
 

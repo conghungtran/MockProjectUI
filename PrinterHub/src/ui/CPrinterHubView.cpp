@@ -306,16 +306,18 @@ void CPrinterHubView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		TRACE(_T("PRINTER_DELETED: index = %d\n"), nIndex);
 
 		if (nIndex >= 0) {
-			DeletePrinterFromList(nIndex);
+			RefreshPrintersList();
 
-			// Chọn item tiếp theo nếu còn
-			int nItemCount = m_listPrinters.GetItemCount();
-			if (nItemCount > 0) {
-				int nNewIndex = (nIndex < nItemCount) ? nIndex : nItemCount - 1;
-				m_listPrinters.SetItemState(nNewIndex, LVIS_SELECTED | LVIS_FOCUSED,
-					LVIS_SELECTED | LVIS_FOCUSED);
-				m_listPrinters.EnsureVisible(nNewIndex, FALSE);
-			}
+			//DeletePrinterFromList(nIndex);
+
+			//// Chọn item tiếp theo nếu còn
+			//int nItemCount = m_listPrinters.GetItemCount();
+			//if (nItemCount > 0) {
+			//	int nNewIndex = (nIndex < nItemCount) ? nIndex : nItemCount - 1;
+			//	m_listPrinters.SetItemState(nNewIndex, LVIS_SELECTED | LVIS_FOCUSED,
+			//		LVIS_SELECTED | LVIS_FOCUSED);
+			//	m_listPrinters.EnsureVisible(nNewIndex, FALSE);
+			//}
 		}
 		break;
 	}
@@ -468,10 +470,10 @@ void CPrinterHubView::OnBnClickedButtonPrinterEditPrinter()
 void CPrinterHubView::OnBnClickedButtonPrinterDeletePrinter()
 {
 	int nSel = m_listPrinters.GetNextItem(-1, LVNI_SELECTED);
-	if (nSel >= 0)
-		m_listPrinters.DeleteItem(nSel);
-	else
+	if (nSel <= 0) {
 		AfxMessageBox(_T("Vui lòng chọn máy in cần xóa!"));
+	}
+		
 
 	CPrinterHubDoc* pDoc = GetDocument();
 	pDoc->DeletePrinter(nSel);
@@ -536,6 +538,41 @@ void CPrinterHubView::OnBnClickedButtonPrinterRedo()
 
 	// Log
 	TRACE(_T("Redo performed\n"));
+}
+
+void CPrinterHubView::RefreshPrintersList()
+{
+	CPrinterHubDoc* pDoc = GetDocument();
+	if (!pDoc) return;
+
+	// Lưu lại item đang chọn
+	int nSelectedIndex = m_listPrinters.GetNextItem(-1, LVNI_SELECTED);
+
+	// Xóa toàn bộ
+	m_listPrinters.DeleteAllItems();
+
+	// Thêm lại tất cả
+	int nCount = pDoc->GetPrinterCount();
+	for (int i = 0; i < nCount; i++) {
+		const auto& printer = pDoc->GetPrinter(i);
+		AddPrinterToList(
+			ConvertData::StringToCString(printer.getId()),
+			ConvertData::StringToCString(printer.getModel()),
+			EnumConverter::FromPrinterBrand(printer.getBrand()),
+			EnumConverter::FromPrinterStatus(printer.getStatus()),
+			ConvertData::StringToCString(printer.getPurchaseDate()),
+			printer.getWarrantyMonth()
+		);
+	}
+
+	// Khôi phục selection (nếu còn)
+	if (nSelectedIndex >= 0 && nSelectedIndex < nCount) {
+		m_listPrinters.SetItemState(nSelectedIndex, LVIS_SELECTED | LVIS_FOCUSED,
+			LVIS_SELECTED | LVIS_FOCUSED);
+		m_listPrinters.EnsureVisible(nSelectedIndex, FALSE);
+	}
+
+	TRACE(_T("RefreshPrintersList: %d printers loaded\n"), nCount);
 }
 
 

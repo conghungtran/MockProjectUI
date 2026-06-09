@@ -39,18 +39,21 @@ namespace PrinterHub {
             {
                 if (this != &other)
                 {
-                    // ✅ CHỈ GIỮ LẠI ID
-                    std::string oldId = this->ID;
+                    // Move tất cả dữ liệu từ other sang this
+                    ID = std::move(other.ID);
+                    model = std::move(other.model);
+                    brand = other.brand;
+                    status = other.status;
+                    purchaseDate = std::move(other.purchaseDate);
+                    warrantyMonth = other.warrantyMonth;
 
-                    // Copy các field khác từ other
-                    this->model = std::move(other.model);
-                    this->brand = other.brand;
-                    this->status = other.status;
-                    this->purchaseDate = std::move(other.purchaseDate);
-                    this->warrantyMonth = other.warrantyMonth;
-
-                    // KHÔNG copy ID, giữ nguyên ID cũ
-                    this->ID = oldId;
+                    // Reset other về trạng thái mặc định
+                    other.ID.clear();
+                    other.model.clear();
+                    other.brand = PrinterBrand::OTHER;
+                    other.status = PrinterStatus::ACTIVE;
+                    other.purchaseDate.clear();
+                    other.warrantyMonth = 0;
                 }
                 return *this;
             }
