@@ -7,8 +7,9 @@
 #include "ui/resource.h"
 #include <iostream>
 #include "core/ConvertData.h"
+#include "core/Firmware.h"
 
-
+using namespace PrinterHub::Core;
 // UpdateFirmwareDlg dialog
 
 IMPLEMENT_DYNAMIC(UpdateFirmwareDlg, CDialogEx)
@@ -172,7 +173,12 @@ void UpdateFirmwareDlg::SetProgress(int nPercent, const CString& strStatus)
 void UpdateFirmwareDlg::OnDownloadStarted()
 {
 	// Có thể thêm animation hoặc log ở đây
+
 }
+//Firmware UpdateFirmwareDlg::GetSelectedFirmware() {
+//	Firmware fw(cstr_fw_printer, cstr_choose_version, FirmwareStatus::Pending, _T("5s"));
+//	return fw;
+//}
 
 void UpdateFirmwareDlg::OnDownloadFinished(bool bSuccess)
 {

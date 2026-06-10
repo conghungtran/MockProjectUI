@@ -33,7 +33,7 @@ public:
 
 	void AddFirmwareToList();
 	//void UpdateFirmwareInList(int nIndex, const PrinterHub::Core::Firmware& firmware);
-
+	void RefreshFirmwareQueue();
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual void OnInitialUpdate(); // called first time after construct

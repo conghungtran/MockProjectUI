@@ -65,7 +65,7 @@ public:
 	void OnDownloadStarted();
 	void OnDownloadFinished(bool bSuccess);
 	void UpdateVersionDetail(const CString& version);
-
+	//Firmware GetSelectedFirmware();
 	CStatic m_staticProgressStatus;
 	CButton m_btnOk;
 };

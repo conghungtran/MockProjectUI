@@ -196,6 +196,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\Firmware.h" />
     <ClInclude Include="src\core\CommandPattern\AddPrinterCommand.h" />
     <ClInclude Include="src\core\CommandPattern\DeletePrinterCommand.h" />
     <ClInclude Include="src\core\CommandPattern\EditPrinterCommand.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="src\ui\dialog\UpdateFirmwareDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Firmware.cpp" />
     <ClCompile Include="src\core\PrinterManager.cpp" />
     <ClCompile Include="src\core\repository\CSVPrinterRepository.cpp" />
     <ClCompile Include="src\ui\component\CCustomEdit.cpp" />

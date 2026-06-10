@@ -608,59 +608,71 @@ void CPrinterHubView::RefreshPrintersList()
 void CPrinterHubView::OnBnClickedButtonPrinterUpdateFirmware()
 {
 
-	// 1. Kiểm tra máy in được chọn
-	int nSel = m_listPrinters.GetNextItem(-1, LVNI_SELECTED);
-	if (nSel == -1) {
-		AfxMessageBox(_T("Vui lòng chọn máy in cần nâng cấp"));
-		return;
-	}
+	//// 1. Kiểm tra máy in được chọn
+	//int nSel = m_listPrinters.GetNextItem(-1, LVNI_SELECTED);
+	//if (nSel == -1) {
+	//	AfxMessageBox(_T("Vui lòng chọn máy in cần nâng cấp"));
+	//	return;
+	//}
 
-	// 2. Lấy thông tin máy in
-	const auto& printer = GetDocument()->GetPrinter(nSel);
+	//// 2. Lấy thông tin máy in
+	//const auto& printer = GetDocument()->GetPrinter(nSel);
 
-	
-	CString strPrinterId(printer.getId().c_str());
-	CString strPrinterModel(printer.getModel().c_str());
-	//CString strCurrentVersion = GetCurrentFirmwareVersion(strPrinterId);
+	//
+	//CString strPrinterId(printer.getId().c_str());
+	//CString strPrinterModel(printer.getModel().c_str());
+	////CString strCurrentVersion = GetCurrentFirmwareVersion(strPrinterId);
 
-	// 3. Mở dialog chọn firmware
-	UpdateFirmwareDlg dlg;
-	dlg.SetPrinterInfo(CString("Model UUUU"), strPrinterModel, strPrinterId);
+	//// 3. Mở dialog chọn firmware
+	//UpdateFirmwareDlg dlg;
+	//dlg.SetPrinterInfo(strPrinterId, strPrinterModel, CString("version^113"));
 
-	//dlg.SetAvailableFirmwares(GetFirmwareListForModel(strPrinterModel));
+	////dlg.SetAvailableFirmwares(GetFirmwareListForModel(strPrinterModel));
 
-	if (dlg.DoModal() == IDOK) {
-		// Lấy firmware được chọn
-		//FirmwareInfo selectedFW = dlg.GetSelectedFirmware();
-		//StartFirmwareUpdate(printer, selectedFW);
-	}
+	//if (dlg.DoModal() == IDOK) {
+	//	// Lấy firmware được chọn
+	//	//Firmware selectedFW = dlg.GetSelectedFirmware();
+	//	//CPrinterHubDoc* pDoc = GetDocument();
+	//	//pDoc->m_firmwareManager.addFirmware(selectedFW);
+	//	//RefreshFirmwareQueue();
+	//	//StartFirmwareUpdate(printer, selectedFW);
+	//}
 }
 
 
-void CPrinterHubView::AddFirmwareToList(
-	const CString& name,
-	const CString& version,
-	const CString& status,
-	const CString& remainTime,
-	const CString& strPurchaseDate,
-	const int& intWarrantyMonth)
+
+void CPrinterHubView::RefreshFirmwareQueue()
 {
-	// Thêm item mới
-	int nIndex = m_listPrinters.GetItemCount();
+	using namespace PrinterHub::Core;
+	CPrinterHubDoc* pDoc = GetDocument();
+	m_listFirmWare.DeleteAllItems();
 
-	// Cột 0: ID máy in
-	CString strValue;
-	strValue.Format(_T("%d"), nIndex);
+	auto& firmwares = pDoc->m_firmwareManager.getAllFirmwares();
 
-	m_listPrinters.InsertItem(nIndex, strValue);
-	m_listPrinters.SetItemText(nIndex, 1, strId);
-	m_listPrinters.SetItemText(nIndex, 2, strModel);
-	m_listPrinters.SetItemText(nIndex, 3, strBrand);
-	m_listPrinters.SetItemText(nIndex, 4, strStatus);
-	m_listPrinters.SetItemText(nIndex, 5, strPurchaseDate);
+	for (int i = 0; i < (int)firmwares.size(); i++)
+	{
+		auto& fw = firmwares[i];
 
-	CString strWarrantyMonth;
-	strWarrantyMonth.Format(_T("%d"), intWarrantyMonth);
-	m_listPrinters.SetItemText(nIndex, 6, strWarrantyMonth);
+		int nItem = m_listFirmWare.InsertItem(i, _T(""));
 
+		// Cột 0: STT
+		CString strSTT;
+		strSTT.Format(_T("%d"), i + 1);
+		m_listFirmWare.SetItemText(nItem, 0, strSTT);
+
+		// Cột 1: Tên máy in
+		m_listFirmWare.SetItemText(nItem, 1, fw.getPrinterName());
+
+		// Cột 2: Firmware version
+		m_listFirmWare.SetItemText(nItem, 2, fw.getFirmwareVersion());
+
+		// Cột 3: Trạng thái (tự động chuyển từ enum sang string)
+		m_listFirmWare.SetItemText(nItem, 3, Firmware::StatusToString(fw.getStatus()));
+
+		// Cột 4: Thời gian ước tính
+		m_listFirmWare.SetItemText(nItem, 4, fw.getEstimatedTime());
+
+		// Tô màu theo trạng thái
+		m_listFirmWare.SetItemData(nItem, fw.getStatusColor());
+	}
 }

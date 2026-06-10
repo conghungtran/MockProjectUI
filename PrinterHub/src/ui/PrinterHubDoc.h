@@ -7,6 +7,7 @@
 #include "../core/Printer.h"
 #include "../core/PrinterManager.h"
 #include "../core/repository/IPrinterRepository.h"
+#include "../core/Firmware.h"
 
 using namespace PrinterHub::Core;
 
@@ -56,6 +57,7 @@ public:
 	void SetRepository(std::shared_ptr<IPrinterRepository> repository);
 public:
 	std::shared_ptr<PrinterManager> m_manager;
+	FirmwareManager m_firmwareManager;
 	//bool m_isDataModified;
 
 // Overrides
