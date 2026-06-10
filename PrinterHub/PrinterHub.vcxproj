@@ -229,6 +229,7 @@
     <ClInclude Include="src\ui\Resource.h" />
     <ClInclude Include="src\ui\targetver.h" />
     <ClInclude Include="src\core\PrinterConfig.h" />
+    <ClInclude Include="src\ui\dialog\UpdateFirmwareDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\PrinterManager.cpp" />
@@ -251,6 +252,7 @@
     <ClCompile Include="src\core\Printer.cpp" />
     <ClCompile Include="src\ui\PrinterHub.cpp" />
     <ClCompile Include="src\ui\PrinterHubDoc.cpp" />
+    <ClCompile Include="src\ui\dialog\UpdateFirmwareDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\ui\PrinterHub.rc" />

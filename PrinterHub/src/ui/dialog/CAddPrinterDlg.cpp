@@ -136,8 +136,7 @@ void CAddPrinterDlg::SetEditData(
                    ,const CString& CstrBrand
                    ,const CString& CstrStatus
                    ,const CString& CstrPurchaseDate
-                   ,const int intWarrantyMonth
-                   )
+                   ,const int intWarrantyMonth)
 {
 
     std::cout << ConvertData::CStringToString(CstrId) << "\n";

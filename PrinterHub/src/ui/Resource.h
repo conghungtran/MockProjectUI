@@ -17,12 +17,29 @@
 #define IDR_MAINFRAME_256               129
 #define IDR_PrinterHubTYPE              130
 #define IDS_EDIT_MENU                   306
-#define IDD_DIALOG1                     317
+#define IDD_DIALOG1                     321
+#define IDD_DIALOG2                     323
 #define IDD_DIALOG_ADD_PRINTER          1000
+#define IDD_DIALOG_UPDATE_FIRMWARE      1001
 #define IDD_DIALOG_FIRMWARE_PROGRESS    1002
 #define IDD_DIALOG_ABOUT                1003
 #define IDD_DIALOG_SETTINGS             1004
 #define IDD_DIALOG_TICKET_DETAIL        1005
+#define IDC_EDIT_FIRMWARE_PRINTER       1021
+#define IDC_COMBO1                      1025
+#define IDC_COMBO2                      1026
+#define IDC_COMBO_LIST_FW               1026
+#define IDC_BUTTON1                     1027
+#define IDC_BUTTON_UPDATEFW_DOWNLOAD    1027
+#define IDC_STATIC_UPDATEFW_DETAIL      1028
+#define IDC_STATIC_FW_printer           1029
+#define IDC_STATIC_FW_model             1030
+#define IDC_STATIC_FW_currentVersion    1031
+#define IDC_STATIC_FW_VERSION_DETAIL    1032
+#define IDC_STATIC_RL_DATE              1033
+#define IDC_STATIC_DISK_SPACE           1034
+#define IDC_PROGRESS1                   1035
+#define IDC_STATIC_DOWNLOADING          1036
 #define IDC_LIST_PRINTERS               2000
 #define IDC_LIST_FIRMWARE_QUEUE         2001
 #define IDC_LIST_TICKETS                2002
@@ -44,7 +61,6 @@
 #define IDC_BUTTON_FIRMWARE_CANCEL_JOB  2202
 #define IDC_BUTTON_FIRMWARE_VIEW_LOG    2203
 #define IDC_BUTTON_FIRMWARE_REFRESH     2204
-#define IDC_                            2204
 #define IDC_BUTTON_ADD_TO_QUEUE         2210
 #define IDC_BUTTON_VIEW_LOG             2211
 #define IDC_BUTTON_TICKET_NEW_TICKET    2300
@@ -59,7 +75,7 @@
 #define IDC_EDIT_ADD_PRINTER_DATE       3004
 #define IDC_EDIT_ADD_PRINTER_WARRANTY   3005
 #define IDC_BUTTON_ADD_CONTINUE         3006
-#define IDC_COMBO_FIRMWARE_VERSION      3100
+#define IDC_COMBO_FIRMWARE              3100
 #define IDC_STATIC_PRINTER_INFO         3101
 #define IDC_STATIC_CURRENT_VERSION      3102
 #define IDC_STATIC_NEW_VERSION          3103
@@ -126,9 +142,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        319
+#define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1020
+#define _APS_NEXT_CONTROL_VALUE         1037
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -31,6 +31,8 @@ public:
 	void UpdatePrinterInList(int nIndex, const PrinterHub::Core::Printer& printer);
 	void LoadFile();
 
+	void AddFirmwareToList();
+	//void UpdateFirmwareInList(int nIndex, const PrinterHub::Core::Firmware& firmware);
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -89,6 +91,7 @@ public:
 	afx_msg void OnBnClickedButtonPrinterDeletePrinter();
 	afx_msg void OnBnClickedButtonPrinterUndo();
 	afx_msg void OnBnClickedButtonPrinterRedo();
+	afx_msg void OnBnClickedButtonPrinterUpdateFirmware();
 };
 
 #ifndef _DEBUG  // debug version in CPrinterHubView.cpp

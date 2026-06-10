@@ -17,6 +17,8 @@
 #define new DEBUG_NEW
 #endif
 #include "./dialog/CAddPrinterDlg.h"
+#include "./dialog/UpdateFirmwareDlg.h"
+
 #include <iostream>
 
 #include "../core/Printer.h"
@@ -44,6 +46,7 @@ BEGIN_MESSAGE_MAP(CPrinterHubView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON_PRINTER_DELETE_PRINTER, &CPrinterHubView::OnBnClickedButtonPrinterDeletePrinter)
 	ON_BN_CLICKED(IDC_BUTTON_PRINTER_UNDO, &CPrinterHubView::OnBnClickedButtonPrinterUndo)
 	ON_BN_CLICKED(IDC_BUTTON_PRINTER_REDO, &CPrinterHubView::OnBnClickedButtonPrinterRedo)
+	ON_BN_CLICKED(IDC_BUTTON_PRINTER_UPDATE_FIRMWARE, &CPrinterHubView::OnBnClickedButtonPrinterUpdateFirmware)
 END_MESSAGE_MAP()
 
 // CPrinterHubView construction/destruction
@@ -115,12 +118,14 @@ void CPrinterHubView::InitializeListControl() {
 	m_listFirmWare.InsertColumn(0, _T("INDEX"), LVCFMT_LEFT, 100);
 	m_listFirmWare.InsertColumn(1, _T("NAME"), LVCFMT_LEFT, 200);
 	m_listFirmWare.InsertColumn(2, _T("VERSION"), LVCFMT_LEFT, 200);
-	m_listFirmWare.InsertColumn(3, _T("STATUS"), LVCFMT_LEFT, 200);
+	m_listFirmWare.InsertColumn(3, _T("STATUS"), LVCFMT_LEFT, 100);
+	m_listFirmWare.InsertColumn(4, _T("REMAIN TIME"), LVCFMT_LEFT, 100);
 
 	int nItemFirmWare = m_listFirmWare.InsertItem(0, _T("1"));
 	m_listFirmWare.SetItemText(nItemFirmWare, 1, _T("HP LaserJet Pro"));
 	m_listFirmWare.SetItemText(nItemFirmWare, 2, _T("Firmware v2.1.0"));
 	m_listFirmWare.SetItemText(nItemFirmWare, 3, _T("Pending"));
+	m_listFirmWare.SetItemText(nItemFirmWare, 4, _T("4s"));
 
 	// Tickets mẫu
 	// Firmware queue mẫu
@@ -575,8 +580,6 @@ void CPrinterHubView::RefreshPrintersList()
 	TRACE(_T("RefreshPrintersList: %d printers loaded\n"), nCount);
 }
 
-
-
 //
 //// Optional: Cập nhật trạng thái nút Undo/Redo (enable/disable)
 //void CPrinterHubView::UpdateUndoRedoButtons()
@@ -601,3 +604,63 @@ void CPrinterHubView::RefreshPrintersList()
 //	// strUndo.Format(_T("Undo: %s"), pDoc->CanUndo() ? _T("Available") : _T("Not available"));
 //	// pStatusBar->SetPaneText(0, strUndo);
 //}
+
+void CPrinterHubView::OnBnClickedButtonPrinterUpdateFirmware()
+{
+
+	// 1. Kiểm tra máy in được chọn
+	int nSel = m_listPrinters.GetNextItem(-1, LVNI_SELECTED);
+	if (nSel == -1) {
+		AfxMessageBox(_T("Vui lòng chọn máy in cần nâng cấp"));
+		return;
+	}
+
+	// 2. Lấy thông tin máy in
+	const auto& printer = GetDocument()->GetPrinter(nSel);
+
+	
+	CString strPrinterId(printer.getId().c_str());
+	CString strPrinterModel(printer.getModel().c_str());
+	//CString strCurrentVersion = GetCurrentFirmwareVersion(strPrinterId);
+
+	// 3. Mở dialog chọn firmware
+	UpdateFirmwareDlg dlg;
+	dlg.SetPrinterInfo(CString("Model UUUU"), strPrinterModel, strPrinterId);
+
+	//dlg.SetAvailableFirmwares(GetFirmwareListForModel(strPrinterModel));
+
+	if (dlg.DoModal() == IDOK) {
+		// Lấy firmware được chọn
+		//FirmwareInfo selectedFW = dlg.GetSelectedFirmware();
+		//StartFirmwareUpdate(printer, selectedFW);
+	}
+}
+
+
+void CPrinterHubView::AddFirmwareToList(
+	const CString& name,
+	const CString& version,
+	const CString& status,
+	const CString& remainTime,
+	const CString& strPurchaseDate,
+	const int& intWarrantyMonth)
+{
+	// Thêm item mới
+	int nIndex = m_listPrinters.GetItemCount();
+
+	// Cột 0: ID máy in
+	CString strValue;
+	strValue.Format(_T("%d"), nIndex);
+
+	m_listPrinters.InsertItem(nIndex, strValue);
+	m_listPrinters.SetItemText(nIndex, 1, strId);
+	m_listPrinters.SetItemText(nIndex, 2, strModel);
+	m_listPrinters.SetItemText(nIndex, 3, strBrand);
+	m_listPrinters.SetItemText(nIndex, 4, strStatus);
+	m_listPrinters.SetItemText(nIndex, 5, strPurchaseDate);
+
+	CString strWarrantyMonth;
+	strWarrantyMonth.Format(_T("%d"), intWarrantyMonth);
+	m_listPrinters.SetItemText(nIndex, 6, strWarrantyMonth);
+
+}
